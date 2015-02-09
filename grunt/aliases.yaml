@@ -1,0 +1,17 @@
+default: dev
+
+dev:
+  - 'clean'
+  - 'copy'
+  - 'sass:dev'
+  - 'pleeease:dev'
+  - 'connect'
+  - 'browserify'
+  - 'jshint'
+  - 'watch'
+
+prod:
+  - 'clean'
+  - 'copy'
+  - 'sass:prod'
+  - 'pleeease:prod'
