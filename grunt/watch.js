@@ -1,7 +1,7 @@
 module.exports = {
   gruntfile: {
-    files: ['Gruntfile.js', 'grunt/*.js', 'src/js/**'],
-    tasks: ['jshint', 'browserify']
+    files: ['src/js/**'],
+    tasks: ['browserify']
   },
   src: {
     files: ['src/css/**/*.scss'],

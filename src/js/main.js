@@ -9,18 +9,21 @@
   var firebase = new Firebase("https://incandescent-fire-2676.firebaseio.com"),
     firebaseProjects = firebase.child('projects'),
     firebaseProject = null,
-    firebaseKeys = firebase.child('copy'),
-    firebaseProjectKeys = null,
+    firebaseKeys = null,
     languages = ['en', 'fr'],
-    $projectList = $('#project-list'),
+    $nav = $('#nav-mobile'),
     $projectData = $('#project-data tbody'),
     $projectHead = $('#project-data thead');
 
 
   firebaseProjects.on("value", function(projects) {
-    $projectList.empty();
-    $.each(projects.val(), function(key, project) {
-      $projectList.append('<li><a href="#" data-action="load-project" data-id="' + key + '">' + project.name + '</a></li>');
+    projects = projects.val();
+    $nav.find('.project').remove();
+
+    if (!projects || !projects.length) return;
+
+    $.each(projects, function(key, project) {
+      $nav.append('<li class="project"><a href="#" data-action="load-project" data-id="' + key + '">' + project.name + '</a></li>');
     });
   });
 
@@ -32,25 +35,25 @@
           'en',
           'fr'
         ]}),
-      projectId = newProject.key(),
-      data = {};
+      projectId = newProject.key();
 
-    data[projectId] = {
-      "text1": {
+    languages = ['en', 'fr'];
+    firebaseKeys = firebase.child('copy/' + projectId);
+    firebaseKeys.push({
+      state: "new",
+      key: "text1",
+      data: {
         en: "text 1 [en]",
         fr: "text 1 [fr]"
       }
-    };
-
-    languages = ['en', 'fr'];
-    firebaseKeys.set(data);
+    });
   });
 
-  $projectList.on('click', '[data-action="load-project"]', function(e) {
+ $nav.on('click', '[data-action="load-project"]', function(e) {
     e.preventDefault();
     var projectId = $(this).attr('data-id');
 
-    if (firebaseProjectKeys) firebaseProjectKeys.off('value');
+    if (firebaseKeys) firebaseKeys.off('value');
     if (firebaseProject) firebaseProject.off('value');
 
     firebaseProject = firebase.child('projects/' + projectId);
@@ -66,22 +69,26 @@
       $projectHead.html(headHtml);
     });
 
-    firebaseProjectKeys = firebase.child('copy/' + projectId);
-    firebaseProjectKeys.on("value", function(copyDeck) {
+    firebaseKeys = firebase.child('copy/' + projectId);
+    firebaseKeys.on("value", function(copyDeck) {
       $projectData.empty();
-      $.each(copyDeck.val(), function(key, copy) {
-        var html =
-          '<tr>' +
-            '<td>' + key + '</td>';
 
-        $.each(languages, function(index, lang) {
-          html += '<td><input type="text" name="' + key + '-' + lang + '" value="' + copy[lang] +'" /></td>';
+      if (copyDeck && copyDeck.val() && !copyDeck.val().length) {
+        $.each(copyDeck.val(), function (key, copy) {
+          var html =
+            '<tr class="' + copy.state + '">' +
+            '<td>' + copy.key + '</td>';
+
+          $.each(languages, function (index, lang) {
+            html += '<td><input type="text" name="' + key + '-' + lang + '" value="' + copy.data[lang] + '" /></td>';
+          });
+
+          html += '<td>Ok</td></tr>';
+
+          $projectData.append(html);
         });
+      }
 
-        html += '<td>Ok</td></tr>';
-
-        $projectData.append(html);
-      });
       $projectData.append(
         '<tr>' +
           '<td><input type="text" name="key" placeholder="New key"/></td>' +

@@ -1,8 +1,13 @@
 module.exports = {
   all: {
     files: {
-      'dest/js/main.js': ['src/js/main.js']
+      'dest/js/app.js': ['src/js/app.js']
     },
-    options: {}
+    options: {
+      transform: [
+        'reactify',
+        'browserify-shim'
+      ]
+    }
   }
 };

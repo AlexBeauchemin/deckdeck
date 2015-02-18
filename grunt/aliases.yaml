@@ -5,9 +5,8 @@ dev:
   - 'copy'
   - 'sass:dev'
   - 'pleeease:dev'
-  - 'connect'
   - 'browserify'
-  - 'jshint'
+  - 'connect'
   - 'watch'
 
 prod:
@@ -15,3 +14,4 @@ prod:
   - 'copy'
   - 'sass:prod'
   - 'pleeease:prod'
+  - 'browserify'
