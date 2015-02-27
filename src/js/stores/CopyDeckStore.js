@@ -6,87 +6,88 @@ var firebaseConnection = require('../firebaseConnection');
 
 var CHANGE_EVENT = 'change';
 
-var _todos = {};
+var _copyDeck = {},
+  firebaseCopyDeck = null;
 
-/**
- * Create a TODO item.
- * @param  {string} text The content of the TODO
- */
-function create(text) {
-  // Hand waving here -- not showing how this interacts with XHR or persistent
-  // server-side storage.
-  // Using the current timestamp + random number in place of a real id.
-  var id = (+new Date() + Math.floor(Math.random() * 999999)).toString(36);
-  _todos[id] = {
-    id: id,
-    complete: false,
-    text: text
-  };
+function create(key) {
+  if (!firebaseCopyDeck) return;
+
+  firebaseCopyDeck.push({
+    state: "new",
+    key: key,
+    copy: {},
+    info: ""
+  });
 }
 
-/**
- * Update a TODO item.
- * @param  {string} id
- * @param {object} updates An object literal containing only the data to be
- *     updated.
- */
 function update(id, updates) {
-  _todos[id] = assign({}, _todos[id], updates);
+  if (!firebaseCopyDeck) return;
+
+  firebaseCopyDeck.child(id).update(updates);
 }
 
-/**
- * Update all of the TODO items with the same object.
- *     the data to be updated.  Used to mark all TODOs as completed.
- * @param  {object} updates An object literal containing only the data to be
- *     updated.
-
- */
-function updateAll(updates) {
-  for (var id in _todos) {
-    update(id, updates);
-  }
-}
-
-/**
- * Delete a TODO item.
- * @param  {string} id
- */
 function destroy(id) {
-  delete _todos[id];
+  if (!firebaseCopyDeck) return;
+
+  delete _copyDeck[id];
+  firebaseCopyDeck.child(id).remove();
 }
 
 /**
  * Delete all the completed TODO items.
  */
-function destroyCompleted() {
+/*function destroyCompleted() {
   for (var id in _todos) {
     if (_todos[id].complete) {
       destroy(id);
     }
   }
-}
+}*/
 
-var TodoStore = assign({}, EventEmitter.prototype, {
+var CopyDeckStore = assign({}, EventEmitter.prototype, {
+  setProject: function(id) {
+    var _this = this;
+
+    if (firebaseCopyDeck) {
+      firebaseCopyDeck.off('value');
+    }
+
+    firebaseCopyDeck = firebaseConnection.child('copydeck/' + id);
+
+    firebaseCopyDeck.on("value", function(copyDeck) {
+      copyDeck = copyDeck.val();
+
+      _copyDeck = {};
+
+      if (copyDeck) {
+        $.each(copyDeck, function(key, copy) {
+          _copyDeck[key] = copy;
+        });
+      }
+
+      _this.emitChange();
+    });
+  },
 
   /**
    * Tests whether all the remaining TODO items are marked as completed.
    * @return {boolean}
    */
-  areAllComplete: function() {
+  /*areAllComplete: function() {
     for (var id in _todos) {
       if (!_todos[id].complete) {
         return false;
       }
     }
     return true;
-  },
+  },*/
 
   /**
    * Get the entire collection of TODOs.
    * @return {object}
    */
   getAll: function() {
-    return _todos;
+    return _copyDeck;
   },
 
   emitChange: function() {
@@ -110,18 +111,27 @@ var TodoStore = assign({}, EventEmitter.prototype, {
 
 // Register callback to handle all updates
 AppDispatcher.register(function(action) {
-  var text;
+  var key;
 
   switch(action.actionType) {
-    case TodoConstants.TODO_CREATE:
-      text = action.text.trim();
-      if (text !== '') {
-        create(text);
-      }
-      TodoStore.emitChange();
-      break;
+    case CopyDeckConstants.COPY_CREATE:
+      key = action.key.trim();
 
-    case TodoConstants.TODO_TOGGLE_COMPLETE_ALL:
+      if (key) create(key);
+
+      CopyDeckStore.emitChange();
+      break;
+    case CopyDeckConstants.COPY_UPDATE:
+      update(action.id, action.values);
+
+      CopyDeckStore.emitChange();
+      break;
+    case CopyDeckConstants.COPY_DESTROY:
+      destroy(action.id);
+
+      CopyDeckStore.emitChange();
+      break;
+    /*case TodoConstants.TODO_TOGGLE_COMPLETE_ALL:
       if (TodoStore.areAllComplete()) {
         updateAll({complete: false});
       } else {
@@ -157,10 +167,10 @@ AppDispatcher.register(function(action) {
       destroyCompleted();
       TodoStore.emitChange();
       break;
-
+    */
     default:
       // no op
   }
 });
 
-module.exports = TodoStore;
+module.exports = CopyDeckStore;

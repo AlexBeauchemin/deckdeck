@@ -18992,6 +18992,48 @@ module.exports = require('./lib/React');
 
 },{"./lib/React":35}],154:[function(require,module,exports){
 var AppDispatcher = require('../dispatcher/AppDispatcher');
+var CopyDeckConstants = require('../constants/CopyDeckConstants');
+
+var CopyDeckActions = {
+
+  /**
+   * @param  {string}  key
+   */
+  create: function(key) {
+    AppDispatcher.dispatch({
+      actionType: CopyDeckConstants.COPY_CREATE,
+      key: key
+    });
+  },
+
+  /**
+   * @param  {string}  id
+   * @param  {object}  values
+   */
+  update: function(id, values) {
+    AppDispatcher.dispatch({
+      actionType: CopyDeckConstants.COPY_UPDATE,
+      values: values,
+      id: id
+    });
+  },
+
+  /**
+   * @param  {string}  id
+   */
+  destroy: function(id) {
+    AppDispatcher.dispatch({
+      actionType: CopyDeckConstants.COPY_DESTROY,
+      id: id
+    });
+  }
+};
+
+module.exports = CopyDeckActions;
+
+
+},{"../constants/CopyDeckConstants":165,"../dispatcher/AppDispatcher":167}],155:[function(require,module,exports){
+var AppDispatcher = require('../dispatcher/AppDispatcher');
 var ProjectConstants = require('../constants/ProjectConstants');
 
 var ProjectActions = {
@@ -19004,13 +19046,23 @@ var ProjectActions = {
       actionType: ProjectConstants.PROJECT_CREATE,
       name: name
     });
+  },
+
+  /**
+   * @param  {string} id
+   */
+  destroy: function(id) {
+    AppDispatcher.dispatch({
+      actionType: ProjectConstants.PROJECT_DESTROY,
+      id: id
+    });
   }
 };
 
 module.exports = ProjectActions;
 
 
-},{"../constants/ProjectConstants":163,"../dispatcher/AppDispatcher":164}],155:[function(require,module,exports){
+},{"../constants/ProjectConstants":166,"../dispatcher/AppDispatcher":167}],156:[function(require,module,exports){
 var React = require('react');
 var App = require('./components/App.react');
 
@@ -19020,18 +19072,34 @@ React.render(
 );
 
 
-},{"./components/App.react":156,"react":153}],156:[function(require,module,exports){
+},{"./components/App.react":157,"react":153}],157:[function(require,module,exports){
 var Header = require('./Header.react');
 var MainSection = require('./MainSection.react');
 var React = require('react');
 var ProjectStore = require('../stores/ProjectStore');
+var CopyDeckStore = require('../stores/CopyDeckStore');
+
+function getStateFromStore() {
+  return {
+    copyDeck: CopyDeckStore.getAll()
+  }
+}
 
 var App = React.createClass({displayName: "App",
 
   getInitialState: function() {
     return {
-      selectedProject: null
+      selectedProject: null,
+      copyDeck: {}
     }
+  },
+
+  componentDidMount: function() {
+    CopyDeckStore.addChangeListener(this._onChange);
+  },
+
+  componentWillUnmount: function() {
+    CopyDeckStore.removeChangeListener(this._onChange);
   },
 
   /**
@@ -19045,16 +19113,30 @@ var App = React.createClass({displayName: "App",
         onChangeProject: this._onChangeProject}
       ), 
       React.createElement(MainSection, {
-        selectedProject: this.state.selectedProject}
+        selectedProject: this.state.selectedProject, 
+        copyDeck: this.state.copyDeck}
       )
       )
   	);
   },
 
+  _onChange: function() {
+    this.setState(getStateFromStore());
+  },
+
   _onChangeProject: function(id) {
+    if (!id) {
+      this.setState({
+        selectedProject: null
+      });
+      return;
+    }
+
     this.setState({
       selectedProject: ProjectStore.getProject(id)
-    })
+    });
+
+    CopyDeckStore.setProject(id);
   }
 
 });
@@ -19062,7 +19144,7 @@ var App = React.createClass({displayName: "App",
 module.exports = App;
 
 
-},{"../stores/ProjectStore":167,"./Header.react":158,"./MainSection.react":159,"react":153}],157:[function(require,module,exports){
+},{"../stores/CopyDeckStore":169,"../stores/ProjectStore":170,"./Header.react":161,"./MainSection.react":162,"react":153}],158:[function(require,module,exports){
 var React = require('react');
 var ReactPropTypes = React.PropTypes;
 
@@ -19090,7 +19172,171 @@ var Button = React.createClass({displayName: "Button",
 module.exports = Button;
 
 
-},{"react":153}],158:[function(require,module,exports){
+},{"react":153}],159:[function(require,module,exports){
+var React = require('react');
+var ReactPropTypes = React.PropTypes;
+
+var CopyDeckActions = require('../actions/CopyDeckActions');
+
+var CopyDeckAdd = React.createClass({displayName: "CopyDeckAdd",
+
+  propTypes: {
+    project: ReactPropTypes.object.isRequired
+  },
+
+  getInitialState: function() {
+    return {
+      newCopyKey: ''
+    }
+  },
+
+  /**
+   * @return {object}
+   */
+  render: function() /*object*/ {
+    return (
+      React.createElement("div", {className: "copy-add"}, 
+        React.createElement("input", {
+          type: "text", 
+          name: "new-copy", 
+          value: this.state.newCopyKey, 
+          placeholder: "New copy key", 
+          onChange: this._onChange}
+        ), 
+        React.createElement("a", {href: "#", onClick: this._addCopy}, 
+          React.createElement("i", {className: "medium mdi-content-add-circle light-blue-text text-lighten-1"})
+        )
+      )
+    );
+  },
+
+  /**
+   * @param {object} event
+   */
+  _onChange: function(/*object*/ event) {
+    this.setState({
+      newCopyKey: event.target.value
+    })
+  },
+
+  _addCopy: function() {
+    CopyDeckActions.create(this.state.newCopyKey);
+  }
+});
+
+module.exports = CopyDeckAdd;
+
+
+},{"../actions/CopyDeckActions":154,"react":153}],160:[function(require,module,exports){
+var React = require('react');
+var ReactPropTypes = React.PropTypes;
+
+var CopyDeckActions = require('../actions/CopyDeckActions');
+
+var CopyDeckItem = React.createClass({displayName: "CopyDeckItem",
+
+  propTypes: {
+    project: ReactPropTypes.object.isRequired,
+    copyItem: ReactPropTypes.object.isRequired,
+    copyKey: ReactPropTypes.string.isRequired
+  },
+
+  getInitialState: function() {
+    var _this = this,
+      languages = this.props.project.languages,
+      values = {};
+
+    languages.forEach(function(language) {
+      if (_this.props.copyItem.copy && _this.props.copyItem.copy.hasOwnProperty(language)) {
+        values[language] = _this.props.copyItem.copy[language]
+      }
+      else {
+        values[language] = {
+          state: "new",
+          value: ""
+        };
+      }
+    });
+
+    return {
+      values: values
+    }
+  },
+
+  /**
+   * @return {object}
+   */
+  render: function() /*object*/ {
+    var _this = this,
+      copy = this.props.copyItem,
+      languages = this.props.project.languages,
+      inputs = [];
+
+    languages.forEach(function(language) {
+      var inputName = copy.key + '-' + language,
+        className = "materialize-textarea " + _this.state.values[language].state;
+
+      inputs.push(
+        React.createElement("td", {key: inputName}, 
+          React.createElement("textarea", {
+            value: _this.state.values[language].value, 
+            name: inputName, 
+            className: className, 
+            onChange: _this._onChange, 
+            "data-id": _this.props.copyKey, 
+            "data-lang": language}
+          )
+        )
+      );
+    });
+
+    return (
+      React.createElement("tr", {className: copy.state}, 
+        React.createElement("td", null, copy.key), 
+        inputs, 
+        React.createElement("td", null, 
+          React.createElement("i", {className: "small mdi-action-info-outline light-blue-text text-lighten-1"}), 
+          React.createElement("a", {href: "#", onClick: this._onDestroy}, React.createElement("i", {className: "small mdi-content-clear red-text"}))
+        )
+      )
+    );
+  },
+
+  /**
+   * @param {object} event
+   */
+  _onChange: function(/*object*/ event) {
+    var $el = $(event.target),
+      values = this.state.values,
+      lang = $el.data('lang');
+
+    values[lang] = {
+      state: "modified",
+      val: event.target.value
+    };
+
+    this.setState({
+      values: values
+    });
+
+    var item = this.props.copyItem;
+    item.copy = values;
+
+    CopyDeckActions.update(this.props.copyKey, item);
+  },
+
+  /**
+   * @param {object} event
+   */
+  _onDestroy: function(/*object*/ event) {
+    CopyDeckActions.destroy(this.props.copyKey);
+  }
+});
+
+module.exports = CopyDeckItem;
+
+
+},{"../actions/CopyDeckActions":154,"react":153}],161:[function(require,module,exports){
 var React = require('react');
 var ReactPropTypes = React.PropTypes;
 
@@ -19122,6 +19368,10 @@ var Header = React.createClass({displayName: "Header",
 
   componentDidMount: function() {
     ProjectStore.addChangeListener(this._onChange);
+
+    // Materialize binds
+    $(".button-collapse").sideNav();
+    $('.collapsible').collapsible();
   },
 
   componentWillUnmount: function() {
@@ -19133,7 +19383,14 @@ var Header = React.createClass({displayName: "Header",
    */
   render: function() {
     var projects = [],
-      project;
+      project,
+      selectedProjectName = "",
+      componentDestroyProject = null;
+
+    if (this.props.selectedProject) {
+      selectedProjectName = this.props.selectedProject.name;
+      componentDestroyProject = React.createElement("a", {href: "#", onClick: this._onDestroy}, React.createElement("i", {className: "small mdi-content-clear"}));
+    }
 
     for (var index in this.state.projectList) {
       project = this.state.projectList[index];
@@ -19154,7 +19411,9 @@ var Header = React.createClass({displayName: "Header",
         React.createElement("nav", {className: "top-nav light-blue lighten-1", role: "navigation"}, 
           React.createElement("div", {className: "container"}, 
             React.createElement("div", {className: "nav-wrapper"}, 
-              React.createElement("a", {href: "#", "data-activates": "nav-mobile", className: "button-collapse top-nav"}, React.createElement("i", {className: "mdi-navigation-menu"}))
+              selectedProjectName, 
+              React.createElement("a", {href: "#", "data-activates": "nav-mobile", className: "button-collapse top-nav"}, React.createElement("i", {className: "mdi-navigation-menu"})), 
+              componentDestroyProject
             )
           )
         ), 
@@ -19189,7 +19448,7 @@ var Header = React.createClass({displayName: "Header",
       ProjectActions.create(name);
       this.setState({
         newProjectName: ''
-      })
+      });
     }
   },
 
@@ -19205,6 +19464,11 @@ var Header = React.createClass({displayName: "Header",
     this.setState({
       newProjectName: name
     });
+  },
+
+  _onDestroy: function() {
+    ProjectActions.destroy(this.props.selectedProject.id);
+    this.props.onChangeProject(null);
   }
 
 });
@@ -19212,57 +19476,67 @@ var Header = React.createClass({displayName: "Header",
 module.exports = Header;
 
 
-},{"../actions/ProjectActions":154,"../stores/ProjectStore":167,"./Button.react":157,"./ProjectItem.react":160,"./TextInput.react":161,"react":153}],159:[function(require,module,exports){
+},{"../actions/ProjectActions":155,"../stores/ProjectStore":170,"./Button.react":158,"./ProjectItem.react":163,"./TextInput.react":164,"react":153}],162:[function(require,module,exports){
 var React = require('react');
 var ReactPropTypes = React.PropTypes;
-
-var CopyDeckStore = require('../stores/CopyDeckStore');
+var CopyDeckItem = require('./CopyDeckItem.react');
+var CopyDeckAdd = require('./CopyDeckAdd.react');
 
 var MainSection = React.createClass({displayName: "MainSection",
 
   propTypes: {
-    selectedProject: ReactPropTypes.object
-  },
-
-  componentDidMount: function() {
-    CopyDeckStore.addChangeListener(this._onChange);
-  },
-
-  componentWillUnmount: function() {
-    CopyDeckStore.removeChangeListener(this._onChange);
+    selectedProject: ReactPropTypes.object,
+    copyDeck: ReactPropTypes.object
   },
 
   /**
    * @return {object}
    */
   render: function() {
-    // This section should be hidden by default
-    // and shown when there are todos.
+    //if (Object.keys(this.props.copyDeck).length < 1) {
+    //  return null;
+    //}
+    if (!this.props.selectedProject) return null;
 
-    /*if (Object.keys(this.props.allCopy).length < 1) {
-      return null;
+    var _copyDeck = this.props.copyDeck,
+      _project = this.props.selectedProject,
+      copyDeck = [],
+      tableHeaders = [];
+
+    _project.languages.forEach(function(language) {
+      tableHeaders.push(React.createElement("th", {key: language}, language));
+    });
+
+
+    for (var key in _copyDeck) {
+      copyDeck.push(
+        React.createElement(CopyDeckItem, {
+          key: key, 
+          copyItem: _copyDeck[key], 
+          copyKey: key, 
+          project: this.props.selectedProject}
+        )
+      );
     }
-
-    var allCopy = this.props.allCopy;
-    var copyDeck = [];
-
-    for (var key in allCopy) {
-      copyDeck.push(<CopyDeckItem key={key} copy={allCopy[key]} />);
-    }*/
 
     return (
       React.createElement("main", null, 
         React.createElement("div", {className: "container"}, 
           React.createElement("div", {className: "row"}, 
             React.createElement("div", {className: "col s12"}, 
-
               React.createElement("table", {id: "project-data", className: "bordered stripped responsive"}, 
-                React.createElement("thead", null
+                React.createElement("thead", null, 
+                  React.createElement("tr", null, 
+                    React.createElement("th", null, "Key"), 
+                    tableHeaders, 
+                    React.createElement("th", null)
+                  )
                 ), 
-                React.createElement("tbody", null
-
+                React.createElement("tbody", null, 
+                copyDeck
                 )
-              )
+              ), 
+              React.createElement(CopyDeckAdd, {project: this.props.selectedProject})
             )
           )
         )
@@ -19274,7 +19548,7 @@ var MainSection = React.createClass({displayName: "MainSection",
 module.exports = MainSection;
 
 
-},{"../stores/CopyDeckStore":166,"react":153}],160:[function(require,module,exports){
+},{"./CopyDeckAdd.react":159,"./CopyDeckItem.react":160,"react":153}],163:[function(require,module,exports){
 var React = require('react');
 var ReactPropTypes = React.PropTypes;
 
@@ -19313,7 +19587,7 @@ var ProjectItem = React.createClass({displayName: "ProjectItem",
 module.exports = ProjectItem;
 
 
-},{"react":153}],161:[function(require,module,exports){
+},{"react":153}],164:[function(require,module,exports){
 var React = require('react');
 var ReactPropTypes = React.PropTypes;
 
@@ -19375,23 +19649,26 @@ var TextInput = React.createClass({displayName: "TextInput",
 module.exports = TextInput;
 
 
-},{"react":153}],162:[function(require,module,exports){
+},{"react":153}],165:[function(require,module,exports){
 var keyMirror = require('keymirror');
 
 module.exports = keyMirror({
-  COPY_CREATE: null
+  COPY_CREATE: null,
+  COPY_UPDATE: null,
+  COPY_DESTROY: null
 });
 
 
-},{"keymirror":6}],163:[function(require,module,exports){
+},{"keymirror":6}],166:[function(require,module,exports){
 var keyMirror = require('keymirror');
 
 module.exports = keyMirror({
-  PROJECT_CREATE: null
+  PROJECT_CREATE: null,
+  PROJECT_DESTROY: null
 });
 
 
-},{"keymirror":6}],164:[function(require,module,exports){
+},{"keymirror":6}],167:[function(require,module,exports){
 /*
  * Copyright (c) 2014, Facebook, Inc.
  * All rights reserved.
@@ -19410,7 +19687,7 @@ var Dispatcher = require('flux').Dispatcher;
 module.exports = new Dispatcher();
 
 
-},{"flux":1}],165:[function(require,module,exports){
+},{"flux":1}],168:[function(require,module,exports){
 (function (global){
 var Firebase = (typeof window !== "undefined" ? window.Firebase : typeof global !== "undefined" ? global.Firebase : null);
 
@@ -19421,7 +19698,7 @@ var firebaseConnection = new Firebase(baseUrl);
 module.exports = firebaseConnection;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],166:[function(require,module,exports){
+},{}],169:[function(require,module,exports){
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 var EventEmitter = require('events').EventEmitter;
 var CopyDeckConstants = require('../constants/CopyDeckConstants');
@@ -19430,87 +19707,88 @@ var firebaseConnection = require('../firebaseConnection');
 
 var CHANGE_EVENT = 'change';
 
-var _todos = {};
+var _copyDeck = {},
+  firebaseCopyDeck = null;
 
-/**
- * Create a TODO item.
- * @param  {string} text The content of the TODO
- */
-function create(text) {
-  // Hand waving here -- not showing how this interacts with XHR or persistent
-  // server-side storage.
-  // Using the current timestamp + random number in place of a real id.
-  var id = (+new Date() + Math.floor(Math.random() * 999999)).toString(36);
-  _todos[id] = {
-    id: id,
-    complete: false,
-    text: text
-  };
+function create(key) {
+  if (!firebaseCopyDeck) return;
+
+  firebaseCopyDeck.push({
+    state: "new",
+    key: key,
+    copy: {},
+    info: ""
+  });
 }
 
-/**
- * Update a TODO item.
- * @param  {string} id
- * @param {object} updates An object literal containing only the data to be
- *     updated.
- */
 function update(id, updates) {
-  _todos[id] = assign({}, _todos[id], updates);
+  if (!firebaseCopyDeck) return;
+
+  firebaseCopyDeck.child(id).update(updates);
 }
 
-/**
- * Update all of the TODO items with the same object.
- *     the data to be updated.  Used to mark all TODOs as completed.
- * @param  {object} updates An object literal containing only the data to be
- *     updated.
-
- */
-function updateAll(updates) {
-  for (var id in _todos) {
-    update(id, updates);
-  }
-}
-
-/**
- * Delete a TODO item.
- * @param  {string} id
- */
 function destroy(id) {
-  delete _todos[id];
+  if (!firebaseCopyDeck) return;
+
+  delete _copyDeck[id];
+  firebaseCopyDeck.child(id).remove();
 }
 
 /**
  * Delete all the completed TODO items.
  */
-function destroyCompleted() {
+/*function destroyCompleted() {
   for (var id in _todos) {
     if (_todos[id].complete) {
       destroy(id);
     }
   }
-}
+}*/
 
-var TodoStore = assign({}, EventEmitter.prototype, {
+var CopyDeckStore = assign({}, EventEmitter.prototype, {
+  setProject: function(id) {
+    var _this = this;
+
+    if (firebaseCopyDeck) {
+      firebaseCopyDeck.off('value');
+    }
+
+    firebaseCopyDeck = firebaseConnection.child('copydeck/' + id);
+
+    firebaseCopyDeck.on("value", function(copyDeck) {
+      copyDeck = copyDeck.val();
+
+      _copyDeck = {};
+
+      if (copyDeck) {
+        $.each(copyDeck, function(key, copy) {
+          _copyDeck[key] = copy;
+        });
+      }
+
+      _this.emitChange();
+    });
+  },
 
   /**
    * Tests whether all the remaining TODO items are marked as completed.
    * @return {boolean}
    */
-  areAllComplete: function() {
+  /*areAllComplete: function() {
     for (var id in _todos) {
       if (!_todos[id].complete) {
         return false;
       }
     }
     return true;
-  },
+  },*/
 
   /**
    * Get the entire collection of TODOs.
    * @return {object}
    */
   getAll: function() {
-    return _todos;
+    return _copyDeck;
   },
 
   emitChange: function() {
@@ -19534,18 +19812,27 @@ var TodoStore = assign({}, EventEmitter.prototype, {
 
 // Register callback to handle all updates
 AppDispatcher.register(function(action) {
-  var text;
+  var key;
 
   switch(action.actionType) {
-    case TodoConstants.TODO_CREATE:
-      text = action.text.trim();
-      if (text !== '') {
-        create(text);
-      }
-      TodoStore.emitChange();
-      break;
+    case CopyDeckConstants.COPY_CREATE:
+      key = action.key.trim();
 
-    case TodoConstants.TODO_TOGGLE_COMPLETE_ALL:
+      if (key) create(key);
+
+      CopyDeckStore.emitChange();
+      break;
+    case CopyDeckConstants.COPY_UPDATE:
+      update(action.id, action.values);
+
+      CopyDeckStore.emitChange();
+      break;
+    case CopyDeckConstants.COPY_DESTROY:
+      destroy(action.id);
+
+      CopyDeckStore.emitChange();
+      break;
+    /*case TodoConstants.TODO_TOGGLE_COMPLETE_ALL:
       if (TodoStore.areAllComplete()) {
         updateAll({complete: false});
       } else {
@@ -19581,16 +19868,16 @@ AppDispatcher.register(function(action) {
       destroyCompleted();
       TodoStore.emitChange();
       break;
-
+    */
     default:
       // no op
   }
 });
 
-module.exports = TodoStore;
+module.exports = CopyDeckStore;
 
 
-},{"../constants/CopyDeckConstants":162,"../dispatcher/AppDispatcher":164,"../firebaseConnection":165,"events":4,"object-assign":7}],167:[function(require,module,exports){
+},{"../constants/CopyDeckConstants":165,"../dispatcher/AppDispatcher":167,"../firebaseConnection":168,"events":4,"object-assign":7}],170:[function(require,module,exports){
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 var EventEmitter = require('events').EventEmitter;
 var ProjectConstants = require('../constants/ProjectConstants');
@@ -19633,18 +19920,28 @@ function create(name) {
       'fr'
     ]});
   var projectId = newProject.key();
+
+  //TODO: Use CopyDeckStore setProject + add functions instead
   var firebaseCopyDeck = firebaseConnection.child('copydeck/' + projectId);
 
   firebaseCopyDeck.push({
     state: "new",
     key: "text1",
-    data: {
+    copy: {
       en: "text 1 [en]",
       fr: "text 1 [fr]"
     }
   });
+}
 
-  //
+function destroy(id) {
+  firebaseProjects.child(id).remove();
+  delete _projects[id];
+
+  ProjectStore.emitChange();
+
+  //TODO: Use CopyDeckStore setProject + destroyAll functions instead
+  firebaseConnection.child('copydeck/' + id).remove();
 }
 
 var ProjectStore = assign({}, EventEmitter.prototype, {
@@ -19705,6 +20002,10 @@ AppDispatcher.register(function(action) {
       }
       ProjectStore.emitChange();
       break;
+    case ProjectConstants.PROJECT_DESTROY:
+      destroy(action.id);
+      ProjectStore.emitChange();
+      break;
     default:
       // no op
   }
@@ -19713,4 +20014,4 @@ AppDispatcher.register(function(action) {
 module.exports = ProjectStore;
 
 
-},{"../constants/ProjectConstants":163,"../dispatcher/AppDispatcher":164,"../firebaseConnection":165,"events":4,"object-assign":7}]},{},[155]);
+},{"../constants/ProjectConstants":166,"../dispatcher/AppDispatcher":167,"../firebaseConnection":168,"events":4,"object-assign":7}]},{},[156]);

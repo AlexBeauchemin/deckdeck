@@ -7769,6 +7769,18 @@ ul.side-nav .collapsible-body li.active, ul.side-nav.fixed .collapsible-body li.
     margin-bottom: 5em; }
  }
 
+.copy-add {
+  line-height: 60px; }
+  .copy-add input {
+    vertical-align: top;
+    width: calc(100% - 80px); }
+  .copy-add a {
+    float: right; }
+
+textarea.materialize-textarea {
+  margin-bottom: 0;
+  padding: 0.2rem 0; }
+
 @media (min-width: 992px) {
   header, main, footer {
     padding-left: 240px; }

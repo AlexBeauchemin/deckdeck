@@ -40,18 +40,28 @@ function create(name) {
       'fr'
     ]});
   var projectId = newProject.key();
+
+  //TODO: Use CopyDeckStore setProject + add functions instead
   var firebaseCopyDeck = firebaseConnection.child('copydeck/' + projectId);
 
   firebaseCopyDeck.push({
     state: "new",
     key: "text1",
-    data: {
+    copy: {
       en: "text 1 [en]",
       fr: "text 1 [fr]"
     }
   });
+}
 
-  //
+function destroy(id) {
+  firebaseProjects.child(id).remove();
+  delete _projects[id];
+
+  ProjectStore.emitChange();
+
+  //TODO: Use CopyDeckStore setProject + destroyAll functions instead
+  firebaseConnection.child('copydeck/' + id).remove();
 }
 
 var ProjectStore = assign({}, EventEmitter.prototype, {
@@ -110,6 +120,10 @@ AppDispatcher.register(function(action) {
       if (name !== '') {
         create(name);
       }
+      ProjectStore.emitChange();
+      break;
+    case ProjectConstants.PROJECT_DESTROY:
+      destroy(action.id);
       ProjectStore.emitChange();
       break;
     default:

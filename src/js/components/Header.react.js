@@ -29,6 +29,10 @@ var Header = React.createClass({
 
   componentDidMount: function() {
     ProjectStore.addChangeListener(this._onChange);
+
+    // Materialize binds
+    $(".button-collapse").sideNav();
+    $('.collapsible').collapsible();
   },
 
   componentWillUnmount: function() {
@@ -40,7 +44,14 @@ var Header = React.createClass({
    */
   render: function() {
     var projects = [],
-      project;
+      project,
+      selectedProjectName = "",
+      componentDestroyProject = null;
+
+    if (this.props.selectedProject) {
+      selectedProjectName = this.props.selectedProject.name;
+      componentDestroyProject = <a href="#" onClick={this._onDestroy}><i className="small mdi-content-clear"></i></a>;
+    }
 
     for (var index in this.state.projectList) {
       project = this.state.projectList[index];
@@ -61,7 +72,9 @@ var Header = React.createClass({
         <nav className="top-nav light-blue lighten-1" role="navigation">
           <div className="container">
             <div className="nav-wrapper">
+              {selectedProjectName}
               <a href="#" data-activates="nav-mobile" className="button-collapse top-nav"><i className="mdi-navigation-menu"></i></a>
+              {componentDestroyProject}
             </div>
           </div>
         </nav>
@@ -96,7 +109,7 @@ var Header = React.createClass({
       ProjectActions.create(name);
       this.setState({
         newProjectName: ''
-      })
+      });
     }
   },
 
@@ -112,6 +125,11 @@ var Header = React.createClass({
     this.setState({
       newProjectName: name
     });
+  },
+
+  _onDestroy: function() {
+    ProjectActions.destroy(this.props.selectedProject.id);
+    this.props.onChangeProject(null);
   }
 
 });

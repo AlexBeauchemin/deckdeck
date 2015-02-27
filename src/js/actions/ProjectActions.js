@@ -11,6 +11,16 @@ var ProjectActions = {
       actionType: ProjectConstants.PROJECT_CREATE,
       name: name
     });
+  },
+
+  /**
+   * @param  {string} id
+   */
+  destroy: function(id) {
+    AppDispatcher.dispatch({
+      actionType: ProjectConstants.PROJECT_DESTROY,
+      id: id
+    });
   }
 };
 
