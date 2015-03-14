@@ -23,7 +23,17 @@ function create(key) {
 function update(id, updates) {
   if (!firebaseCopyDeck) return;
 
+  console.log(updates);
+
   firebaseCopyDeck.child(id).update(updates);
+}
+
+function done(id) {
+  if (!firebaseCopyDeck) return;
+
+  firebaseCopyDeck.child(id).update({
+    state: "done"
+  });
 }
 
 function destroy(id) {
@@ -128,6 +138,11 @@ AppDispatcher.register(function(action) {
       break;
     case CopyDeckConstants.COPY_DESTROY:
       destroy(action.id);
+
+      CopyDeckStore.emitChange();
+      break;
+    case CopyDeckConstants.COPY_DONE:
+      done(action.id);
 
       CopyDeckStore.emitChange();
       break;

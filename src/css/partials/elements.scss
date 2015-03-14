@@ -1,0 +1,71 @@
+.copydeck-actions {
+  background-color: #fff;
+
+  &.row {
+    margin-bottom: 0;
+  }
+
+  input {
+    vertical-align: top;
+    width: calc(100% - 80px);
+  }
+
+  .waves-circle {
+    height: auto;
+    line-height: initial;
+    width: auto;
+  }
+
+  button {
+    margin-top: 10px;
+  }
+}
+
+.modal {
+  padding: 24px 24px 0 24px;
+}
+
+textarea.materialize-textarea {
+  margin-bottom: 0;
+  padding: 0.2rem 0;
+}
+
+#project-data {
+  margin-bottom: 80px;
+
+  thead {
+    display: none;
+  }
+
+  tr {
+    td {
+      border-radius: 0;
+      padding: 5px;
+    }
+
+    &>td:first-child {
+      @extend .red;
+      width: 10px;
+    }
+
+    &.done {
+      &>td:first-child {
+        @extend .green;
+      }
+
+      .action-done {
+        display: none;
+      }
+    }
+
+    &.modified {
+      &>td:first-child {
+        @extend .yellow;
+      }
+    }
+  }
+}
+
+nav a.button-collapse.show-on-large {
+  display: inline-block !important;
+}

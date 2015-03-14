@@ -1,18 +1,11 @@
 var React = require('react');
-var ReactPropTypes = React.PropTypes;
 
-var CopyDeckActions = require('../actions/CopyDeckActions');
+var ModalNewCopy = require('./ModalNewCopy.react');
 
 var CopyDeckAdd = React.createClass({
 
-  propTypes: {
-    project: ReactPropTypes.object.isRequired
-  },
-
-  getInitialState: function() {
-    return {
-      newCopyKey: ''
-    }
+  componentDidMount: function() {
+    $('.modal-trigger').leanModal();
   },
 
   /**
@@ -20,32 +13,16 @@ var CopyDeckAdd = React.createClass({
    */
   render: function() /*object*/ {
     return (
-      <div className="copy-add">
-        <input
-          type="text"
-          name="new-copy"
-          value={this.state.newCopyKey}
-          placeholder="New copy key"
-          onChange={this._onChange}
-        />
-        <a href="#" onClick={this._addCopy}>
-          <i className="medium mdi-content-add-circle light-blue-text text-lighten-1"></i>
-        </a>
+      <div>
+        <div className="copydeck-actions">
+          <a className="modal-trigger" href="#addCopy">
+            <i className="medium mdi-content-add-circle light-blue-text text-lighten-1 waves-effect waves-light waves-circle"></i>
+          </a>
+        </div>
+
+        <ModalNewCopy />
       </div>
     );
-  },
-
-  /**
-   * @param {object} event
-   */
-  _onChange: function(/*object*/ event) {
-    this.setState({
-      newCopyKey: event.target.value
-    })
-  },
-
-  _addCopy: function() {
-    CopyDeckActions.create(this.state.newCopyKey);
   }
 });
 

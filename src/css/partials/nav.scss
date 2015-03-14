@@ -1,36 +1,48 @@
-header {
-  ul.side-nav.fixed {
-    li:hover {
-      background-color: $colorLightBlue;
+#sidenav-overlay {
+  background-color: rgba(0, 0, 0, 0);
+}
+
+#slide-out {
+  height: calc(100% - 64px);
+  top: 64px;
+
+  li {
+    display: block;
+  }
+
+  li:hover {
+    background-color: $colorLightBlue;
+  }
+
+  li:active, li.active {
+    background-color: $colorBlue;
+    color: #fff;
+
+    a { color:#fff; }
+  }
+
+  .add-project {
+    &:hover, &:active {
+      background-color: #fff;
     }
 
-    li:active, li.active {
-      background-color: $colorBlue;
+    .btn {
       color: #fff;
-
-      a { color:#fff; }
-    }
-
-    .add-project {
-      &:hover, &:active {
-        background-color: #fff;
-      }
-
-      .btn {
-        color: #fff;
-        display: block;
-        width: 100%;
-      }
-    }
-
-    .logo {
-      border-bottom: 1px solid $colorBlue;
-      line-height: 63px;
-      font-size: 22px;
-
-      &:hover, &:active {
-        background-color: #fff;
-      }
+      display: block;
+      width: 100%;
     }
   }
+}
+
+nav {
+  .dropdown-button {
+    font-size: 43px;
+    font-size: 2.7rem;
+    height: 64px;
+    line-height: 64px;
+  }
+}
+
+#nav-dropdown-actions a {
+  white-space: nowrap;
 }

@@ -48,25 +48,30 @@ var CopyDeckItem = React.createClass({
 
       inputs.push(
         <td key={inputName}>
-          <textarea
-            value={_this.state.values[language].value}
-            name={inputName}
-            className={className}
-            onChange={_this._onChange}
-            data-id={_this.props.copyKey}
-            data-lang={language}
-          />
+          <div className="input-field">
+            <textarea
+              value={_this.state.values[language].val}
+              name={inputName}
+              className={className}
+              onChange={_this._onChange}
+              data-id={_this.props.copyKey}
+              data-lang={language}
+            />
+            <label htmlFor="{inputName}">{language}</label>
+          </div>
         </td>
       );
     });
 
     return (
       <tr className={copy.state}>
+        <td></td>
         <td>{copy.key}</td>
         {inputs}
-        <td>
+        <td className="right-align">
           <i className="small mdi-action-info-outline light-blue-text text-lighten-1"></i>
-          <a href="#" onClick={this._onDestroy}><i className="small mdi-content-clear red-text"></i></a>
+          <a href="#" onClick={this._onDone} className="action-done"><i className="small mdi-action-done green-text"></i></a>
+          <a href="#" onClick={this._onDestroy} className="action-clear"><i className="small mdi-content-clear red-text"></i></a>
         </td>
       </tr>
     );
@@ -91,15 +96,19 @@ var CopyDeckItem = React.createClass({
 
     var item = this.props.copyItem;
     item.copy = values;
+    item.state = "modified";
+
+    console.log(this.state);
 
     CopyDeckActions.update(this.props.copyKey, item);
   },
 
-  /**
-   * @param {object} event
-   */
-  _onDestroy: function(/*object*/ event) {
+  _onDestroy: function() {
     CopyDeckActions.destroy(this.props.copyKey);
+  },
+
+  _onDone: function() {
+    CopyDeckActions.done(this.props.copyKey);
   }
 });
 

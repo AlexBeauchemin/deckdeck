@@ -1,11 +1,10 @@
-var React = require('react');
+var React = require('react/addons');
 var ReactPropTypes = React.PropTypes;
 
 var ProjectStore = require('../stores/ProjectStore');
-var ProjectActions = require('../actions/ProjectActions');
 
-var TextInput = require('./TextInput.react');
-var Button = require('./Button.react');
+var ModalNewProject = require('./ModalNewProject.react');
+var ModalDeleteProject = require('./ModalDeleteProject.react');
 var ProjectItem = require('./ProjectItem.react');
 
 function getStateFromStore() {
@@ -32,7 +31,20 @@ var Header = React.createClass({
 
     // Materialize binds
     $(".button-collapse").sideNav();
-    $('.collapsible').collapsible();
+    //$('.collapsible').collapsible();
+    $('.modal-trigger').leanModal();
+    $('.dropdown-button').dropdown({
+      constrain_width: false,
+      hover: false,
+      alignment: 'right',
+      belowOrigin: false
+    });
+
+    // https://groups.google.com/forum/#!topic/reactjs/mHfBGI3Qwz4
+  },
+
+  componentDidUpdate: function() {
+
   },
 
   componentWillUnmount: function() {
@@ -45,13 +57,12 @@ var Header = React.createClass({
   render: function() {
     var projects = [],
       project,
-      selectedProjectName = "",
-      componentDestroyProject = null;
+      cx = React.addons.classSet;
 
-    if (this.props.selectedProject) {
-      selectedProjectName = this.props.selectedProject.name;
-      componentDestroyProject = <a href="#" onClick={this._onDestroy}><i className="small mdi-content-clear"></i></a>;
-    }
+    var dropDownClasses = cx({
+      'modal-trigger': true,
+      'hidden': this.props.selectedProject ? true : false
+    });
 
     for (var index in this.state.projectList) {
       project = this.state.projectList[index];
@@ -69,48 +80,41 @@ var Header = React.createClass({
 
     return (
       <header>
-        <nav className="top-nav light-blue lighten-1" role="navigation">
-          <div className="container">
-            <div className="nav-wrapper">
-              {selectedProjectName}
-              <a href="#" data-activates="nav-mobile" className="button-collapse top-nav"><i className="mdi-navigation-menu"></i></a>
-              {componentDestroyProject}
-            </div>
-          </div>
-        </nav>
+        <div className="navbar-fixed">
+          <nav className="light-blue lighten-1" role="navigation">
+            <ul className="left">
+              <li>
+                <a href="#" data-activates="slide-out" className="button-collapse show-on-large"><i className="mdi-navigation-menu"></i></a>
+              </li>
+              <li className="logo">
+                <a href="#" className="brand-logo">DeckDeck</a>
+              </li>
+            </ul>
 
-        <ul id="nav-mobile" className="side-nav fixed">
-          <li className="logo">
-            <a id="logo-container" href="#" className="brand-logo blue-text text-lighten-1">DeckDeck</a>
-          </li>
-          <li className="add-project">
-            <TextInput
-              id="new-project"
-              placeholder="Create new project"
-              onChange={this._onChangeProjectName}
-              onSave={this._onSave}
-              value={this.state.newProjectName}
-            />
-            <Button
-              className="btn waves-effect waves-light light-blue lighten-1"
-              onClick={this._onSave}
-              value="Add project"
-            />
-          </li>
-          {projects}
-        </ul>
+            <ul className="right">
+              <li id="nav-dropdown">
+                <a href="#" className="dropdown-button" data-activates="nav-dropdown-actions"><i className="mdi-navigation-more-vert"></i></a>
+                <ul id="nav-dropdown-actions" className='dropdown-content'>
+                  <li><a className="modal-trigger" href="#newProject">New project</a></li>
+                  <li><a className="modal-trigger" href="#deleteProject">Delete project</a></li>
+                </ul>
+              </li>
+            </ul>
+
+            <ul id="slide-out" className="side-nav fixed">
+              {projects}
+            </ul>
+          </nav>
+        </div>
+
+        <ModalDeleteProject
+          project={this.props.selectedProject}
+          onDestroyProject={this.props.onChangeProject}
+        />
+
+        <ModalNewProject />
       </header>
     );
-  },
-
-  _onSave: function() {
-    var name = this.state.newProjectName;
-    if (name.trim()){
-      ProjectActions.create(name);
-      this.setState({
-        newProjectName: ''
-      });
-    }
   },
 
   _onChange: function() {
@@ -118,20 +122,14 @@ var Header = React.createClass({
   },
 
   _onChangeProject: function(id) {
-    this.props.onChangeProject(id);
-  },
+    var _this = this;
 
-  _onChangeProjectName: function(name) {
-    this.setState({
-      newProjectName: name
-    });
-  },
+    $('.button-collapse').sideNav('hide');
 
-  _onDestroy: function() {
-    ProjectActions.destroy(this.props.selectedProject.id);
-    this.props.onChangeProject(null);
+    setTimeout(function() {
+      _this.props.onChangeProject(id);
+    },300);
   }
-
 });
 
 module.exports = Header;

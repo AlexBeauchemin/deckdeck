@@ -40,6 +40,7 @@ var App = React.createClass({
       <MainSection
         selectedProject={this.state.selectedProject}
         copyDeck={this.state.copyDeck}
+        onDestroyProject={this._onChangeProject}
       />
       </div>
   	);

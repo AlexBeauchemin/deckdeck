@@ -7,7 +7,8 @@ var MainSection = React.createClass({
 
   propTypes: {
     selectedProject: ReactPropTypes.object,
-    copyDeck: ReactPropTypes.object
+    copyDeck: ReactPropTypes.object,
+    onDestroyProject: ReactPropTypes.func.isRequired
   },
 
   /**
@@ -45,9 +46,11 @@ var MainSection = React.createClass({
         <div className="container">
           <div className="row">
             <div className="col s12">
-              <table id="project-data" className="bordered stripped responsive">
+              <h2>{this.props.selectedProject.name}</h2>
+              <table id="project-data" className="stripped responsive">
                 <thead>
                   <tr>
+                    <th></th>
                     <th>Key</th>
                     {tableHeaders}
                     <th></th>
@@ -57,9 +60,9 @@ var MainSection = React.createClass({
                 {copyDeck}
                 </tbody>
               </table>
-              <CopyDeckAdd project={this.props.selectedProject} />
             </div>
           </div>
+          <CopyDeckAdd />
         </div>
       </main>
     );

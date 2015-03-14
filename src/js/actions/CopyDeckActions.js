@@ -33,6 +33,16 @@ var CopyDeckActions = {
       actionType: CopyDeckConstants.COPY_DESTROY,
       id: id
     });
+  },
+
+  /**
+   * @param  {string}  id
+   */
+  done: function(id) {
+    AppDispatcher.dispatch({
+      actionType: CopyDeckConstants.COPY_DONE,
+      id: id
+    });
   }
 };
 

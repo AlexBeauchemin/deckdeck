@@ -1,21 +1,9 @@
-.copy-add {
-  line-height: 60px;
-
-  input {
-    vertical-align: top;
-    width: calc(100% - 80px);
-  }
-
-  a { float: right; }
-}
-
-textarea.materialize-textarea {
-  margin-bottom: 0;
-  padding: 0.2rem 0;
-}
-
 @media (min-width: $medium-screen) {
-    header, main, footer {
-        padding-left: $sidenav-width;
-    }
+  /*header, main, footer {
+      padding-left: $sidenav-width;
+  }*/
+
+  ul.side-nav.fixed {
+    left: -250px;
+  }
 }

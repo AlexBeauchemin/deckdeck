@@ -14,14 +14,14 @@ var ProjectItem = React.createClass({
    * @return {object}
    */
   render: function() /*object*/ {
-    var className = "";
+    var className = "waves-effect waves-light";
     if (this.props.selectedProject && this.props.selectedProject.id === this.props.id) {
-      className = "active";
+      className = "waves-effect waves-light active";
     }
 
     return (
       <li className={className}>
-        <a href="#" onClick={this._changeProject}>
+        <a href="#"  onClick={this._changeProject}>
           {this.props.name}
         </a>
       </li>
