@@ -20949,11 +20949,14 @@ var CopyDeckItem = React.createClass({displayName: "CopyDeckItem",
     var _this = this,
       copy = this.props.copyItem,
       languages = this.props.project.languages,
-      inputs = [];
+      inputs = [],
+      labelClass = "";
 
     languages.forEach(function(language) {
       var inputName = copy.key + '-' + language,
         className = "materialize-textarea " + _this.state.values[language].state;
+
+      if (_this.state.values[language].val) labelClass = "active";
 
       inputs.push(
         React.createElement("td", {key: inputName}, 
@@ -20966,7 +20969,7 @@ var CopyDeckItem = React.createClass({displayName: "CopyDeckItem",
               "data-id": _this.props.copyKey, 
               "data-lang": language}
             ), 
-            React.createElement("label", {htmlFor: "{inputName}"}, language)
+            React.createElement("label", {htmlFor: "{inputName}", className: labelClass}, language)
           )
         )
       );
@@ -20978,7 +20981,7 @@ var CopyDeckItem = React.createClass({displayName: "CopyDeckItem",
         React.createElement("td", null, copy.key), 
         inputs, 
         React.createElement("td", {className: "right-align"}, 
-          React.createElement("i", {className: "small mdi-action-info-outline light-blue-text text-lighten-1"}), 
+          React.createElement("a", {href: "#editInfo", className: "modal-trigger"}, React.createElement("i", {className: "small mdi-action-info-outline light-blue-text text-lighten-1"})), 
           React.createElement("a", {href: "#", onClick: this._onDone, className: "action-done"}, React.createElement("i", {className: "small mdi-action-done green-text"})), 
           React.createElement("a", {href: "#", onClick: this._onDestroy, className: "action-clear"}, React.createElement("i", {className: "small mdi-content-clear red-text"}))
         )

@@ -40,11 +40,14 @@ var CopyDeckItem = React.createClass({
     var _this = this,
       copy = this.props.copyItem,
       languages = this.props.project.languages,
-      inputs = [];
+      inputs = [],
+      labelClass = "";
 
     languages.forEach(function(language) {
       var inputName = copy.key + '-' + language,
         className = "materialize-textarea " + _this.state.values[language].state;
+
+      if (_this.state.values[language].val) labelClass = "active";
 
       inputs.push(
         <td key={inputName}>
@@ -57,7 +60,7 @@ var CopyDeckItem = React.createClass({
               data-id={_this.props.copyKey}
               data-lang={language}
             />
-            <label htmlFor="{inputName}">{language}</label>
+            <label htmlFor="{inputName}" className={labelClass}>{language}</label>
           </div>
         </td>
       );
@@ -69,7 +72,7 @@ var CopyDeckItem = React.createClass({
         <td>{copy.key}</td>
         {inputs}
         <td className="right-align">
-          <i className="small mdi-action-info-outline light-blue-text text-lighten-1"></i>
+          <a href="#editInfo" className="modal-trigger"><i className="small mdi-action-info-outline light-blue-text text-lighten-1"></i></a>
           <a href="#" onClick={this._onDone} className="action-done"><i className="small mdi-action-done green-text"></i></a>
           <a href="#" onClick={this._onDestroy} className="action-clear"><i className="small mdi-content-clear red-text"></i></a>
         </td>
