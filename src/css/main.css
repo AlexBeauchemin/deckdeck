@@ -7843,8 +7843,29 @@ textarea.materialize-textarea {
     width: 10px; }
   #project-data tr.done .action-done {
     display: none; }
+  #project-data tbody.modified tr {
+    display: none; }
+    #project-data tbody.modified tr.modified {
+      display: table-row; }
+  #project-data tbody.new tr {
+    display: none; }
+    #project-data tbody.new tr.new {
+      display: table-row; }
+  #project-data tbody.done tr {
+    display: none; }
+    #project-data tbody.done tr.done {
+      display: table-row; }
 
 nav a.button-collapse.show-on-large {
   display: inline-block !important; }
+
+ul.tabs {
+  margin-bottom: 20px; }
+  ul.tabs li.tab a {
+    color: #29b6f6; }
+    ul.tabs li.tab a:hover {
+      color: #bbdefb; }
+  ul.tabs .indicator {
+    background-color: #29b6f6; }
 
 /*# sourceMappingURL=main.css.map */

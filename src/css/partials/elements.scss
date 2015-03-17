@@ -64,8 +64,47 @@ textarea.materialize-textarea {
       }
     }
   }
+
+  tbody {
+    &.modified {
+      tr {
+        display: none;
+        &.modified { display: table-row; }
+      }
+    }
+
+    &.new {
+      tr {
+        display: none;
+        &.new { display: table-row; }
+      }
+    }
+
+    &.done {
+      tr {
+        display: none;
+        &.done { display: table-row; }
+      }
+    }
+  }
 }
 
 nav a.button-collapse.show-on-large {
   display: inline-block !important;
+}
+
+ul.tabs {
+  margin-bottom: 20px;
+
+  li.tab  a {
+    color: $colorBlue;
+
+    &:hover {
+      color: $colorLightBlue;
+    }
+  }
+
+  .indicator {
+    background-color: $colorBlue;
+  }
 }

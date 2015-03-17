@@ -23,16 +23,20 @@ function create(key) {
 function update(id, updates) {
   if (!firebaseCopyDeck) return;
 
-  console.log(updates);
-
   firebaseCopyDeck.child(id).update(updates);
 }
 
 function done(id) {
-  if (!firebaseCopyDeck) return;
+  if (!firebaseCopyDeck || !_copyDeck[id]) return;
+
+  //Set previous value (for compare)
+  $.each(_copyDeck[id].copy, function(lang, copy) {
+    _copyDeck[id].copy[lang].previousVal = copy.val;
+  });
 
   firebaseCopyDeck.child(id).update({
-    state: "done"
+    state: "done",
+    copy: _copyDeck[id].copy
   });
 }
 

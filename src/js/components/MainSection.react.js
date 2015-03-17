@@ -11,6 +11,16 @@ var MainSection = React.createClass({
     onDestroyProject: ReactPropTypes.func.isRequired
   },
 
+  componentDidUpdate: function() {
+    $('ul.tabs').tabs();
+  },
+
+  getInitialState: function() {
+    return {
+      displayClass: "all"
+    }
+  },
+
   /**
    * @return {object}
    */
@@ -29,7 +39,6 @@ var MainSection = React.createClass({
       tableHeaders.push(<th key={language}>{language}</th>);
     });
 
-
     for (var key in _copyDeck) {
       copyDeck.push(
         <CopyDeckItem
@@ -47,6 +56,14 @@ var MainSection = React.createClass({
           <div className="row">
             <div className="col s12">
               <h2>{this.props.selectedProject.name}</h2>
+
+              <ul className="tabs z-depth-1">
+                <li className="tab col s3"><a href="#" onClick={this.tabClick} data-display-class="all" className="active" >All</a></li>
+                <li className="tab col s3"><a href="#" onClick={this.tabClick} data-display-class="new">New</a></li>
+                <li className="tab col s3"><a href="#" onClick={this.tabClick} data-display-class="modified">Modified</a></li>
+                <li className="tab col s3"><a href="#" onClick={this.tabClick} data-display-class="done">Done</a></li>
+              </ul>
+
               <table id="project-data" className="stripped responsive">
                 <thead>
                   <tr>
@@ -56,7 +73,7 @@ var MainSection = React.createClass({
                     <th></th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className={this.state.displayClass}>
                 {copyDeck}
                 </tbody>
               </table>
@@ -66,6 +83,12 @@ var MainSection = React.createClass({
         </div>
       </main>
     );
+  },
+
+  tabClick: function(e) {
+    this.setState({
+      displayClass: $(e.target).data('display-class')
+    });
   }
 });
 

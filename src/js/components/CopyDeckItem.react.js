@@ -2,6 +2,7 @@ var React = require('react');
 var ReactPropTypes = React.PropTypes;
 
 var CopyDeckActions = require('../actions/CopyDeckActions');
+var CopyDeckItemDiff = require('./CopyDeckItemDiff.react');
 
 var CopyDeckItem = React.createClass({
 
@@ -12,24 +13,8 @@ var CopyDeckItem = React.createClass({
   },
 
   getInitialState: function() {
-    var _this = this,
-      languages = this.props.project.languages,
-      values = {};
-
-    languages.forEach(function(language) {
-      if (_this.props.copyItem.copy && _this.props.copyItem.copy.hasOwnProperty(language)) {
-        values[language] = _this.props.copyItem.copy[language]
-      }
-      else {
-        values[language] = {
-          state: "new",
-          value: ""
-        };
-      }
-    });
-
     return {
-      values: values
+      values: this.props.copyItem.copy
     }
   },
 
@@ -39,29 +24,40 @@ var CopyDeckItem = React.createClass({
   render: function() /*object*/ {
     var _this = this,
       copy = this.props.copyItem,
+      values = this.state.values,
       languages = this.props.project.languages,
       inputs = [],
       labelClass = "";
 
     languages.forEach(function(language) {
       var inputName = copy.key + '-' + language,
-        className = "materialize-textarea " + _this.state.values[language].state;
+        previousVal = "";
 
-      if (_this.state.values[language].val) labelClass = "active";
+      if (!values) values = {};
+      if (!values[language]) values[language] = {val: ""};
+      if (values[language].val) labelClass = "active";
+
+      if (copy.copy) console.log(copy.copy[language]);
+
+      if (copy.copy && copy.copy[language]) previousVal = copy.copy[language].previousVal;
 
       inputs.push(
         <td key={inputName}>
           <div className="input-field">
             <textarea
-              value={_this.state.values[language].val}
+              value={values[language].val}
               name={inputName}
-              className={className}
+              className="materialize-textarea"
               onChange={_this._onChange}
               data-id={_this.props.copyKey}
               data-lang={language}
             />
             <label htmlFor="{inputName}" className={labelClass}>{language}</label>
           </div>
+          <CopyDeckItemDiff
+            val={values[language].val}
+            previousVal={previousVal}
+          />
         </td>
       );
     });
@@ -85,23 +81,21 @@ var CopyDeckItem = React.createClass({
    */
   _onChange: function(/*object*/ event) {
     var $el = $(event.target),
-      values = this.state.values,
-      lang = $el.data('lang');
+      values = this.props.copyItem.copy,
+      lang = $el.data('lang'),
+      item = this.props.copyItem;
 
-    values[lang] = {
-      state: "modified",
-      val: event.target.value
-    };
+    if (!values) values = {};
+    if (!values[lang]) values[lang] = {val: ""};
+
+    values[lang].val = event.target.value;
 
     this.setState({
       values: values
     });
 
-    var item = this.props.copyItem;
     item.copy = values;
     item.state = "modified";
-
-    console.log(this.state);
 
     CopyDeckActions.update(this.props.copyKey, item);
   },
