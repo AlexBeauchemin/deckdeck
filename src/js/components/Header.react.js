@@ -32,7 +32,11 @@ var Header = React.createClass({
     // Materialize binds
     $(".button-collapse").sideNav();
     //$('.collapsible').collapsible();
-    $('.modal-trigger').leanModal();
+    $('.modal-trigger').leanModal({
+      ready: function(e) {
+        $('#project-name').focus();
+      }
+    });
     $('.dropdown-button').dropdown({
       constrain_width: false,
       hover: false,

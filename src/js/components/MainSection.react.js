@@ -2,6 +2,7 @@ var React = require('react');
 var ReactPropTypes = React.PropTypes;
 var CopyDeckItem = require('./CopyDeckItem.react');
 var CopyDeckAdd = require('./CopyDeckAdd.react');
+var CopyDeckMenu = require('./CopyDeckMenu.react');
 
 var MainSection = React.createClass({
 
@@ -11,13 +12,15 @@ var MainSection = React.createClass({
     onDestroyProject: ReactPropTypes.func.isRequired
   },
 
-  componentDidUpdate: function() {
-    $('ul.tabs').tabs();
-  },
-
   getInitialState: function() {
+    var diffVisible = localStorage.getItem('diffVisible');
+
+    diffVisible = !!(diffVisible === true || diffVisible === "true");
+
     return {
-      displayClass: "all"
+      diffVisible: diffVisible,
+      displayClass: "all",
+      visibilityClass: "mdi-action-visibility-off"
     }
   },
 
@@ -33,7 +36,8 @@ var MainSection = React.createClass({
     var _copyDeck = this.props.copyDeck,
       _project = this.props.selectedProject,
       copyDeck = [],
-      tableHeaders = [];
+      tableHeaders = [],
+      iconClass = "light-blue-text text-lighten-1 " + this.state.visibilityClass;
 
     _project.languages.forEach(function(language) {
       tableHeaders.push(<th key={language}>{language}</th>);
@@ -46,6 +50,7 @@ var MainSection = React.createClass({
           copyItem={_copyDeck[key]}
           copyKey={key}
           project={this.props.selectedProject}
+          diffVisible={this.state.diffVisible}
         />
       );
     }
@@ -55,16 +60,16 @@ var MainSection = React.createClass({
         <div className="container">
           <div className="row">
             <div className="col s12">
-              <h2>{this.props.selectedProject.name}</h2>
+              <h4>
+                {this.props.selectedProject.name}
+                <a href="#" className="right" onClick={this._toggleDiff} title="Show diff for modified items">
+                  <i className={iconClass}></i>
+                </a>
+              </h4>
 
-              <ul className="tabs z-depth-1">
-                <li className="tab col s3"><a href="#" onClick={this.tabClick} data-display-class="all" className="active" >All</a></li>
-                <li className="tab col s3"><a href="#" onClick={this.tabClick} data-display-class="new">New</a></li>
-                <li className="tab col s3"><a href="#" onClick={this.tabClick} data-display-class="modified">Modified</a></li>
-                <li className="tab col s3"><a href="#" onClick={this.tabClick} data-display-class="done">Done</a></li>
-              </ul>
+              <CopyDeckMenu tabClick={this.tabClick}/>
 
-              <table id="project-data" className="stripped responsive">
+              <table id="project-data" className="striped responsive">
                 <thead>
                   <tr>
                     <th></th>
@@ -88,6 +93,19 @@ var MainSection = React.createClass({
   tabClick: function(e) {
     this.setState({
       displayClass: $(e.target).data('display-class')
+    });
+  },
+
+  _toggleDiff: function() {
+    var visibilityClass = "mdi-action-visibility";
+
+    if (this.state.visibilityClass == "mdi-action-visibility") visibilityClass = "mdi-action-visibility-off";
+
+    localStorage.setItem('diffVisible', !this.state.diffVisible);
+
+    this.setState({
+      diffVisible: !this.state.diffVisible,
+      visibilityClass: visibilityClass
     });
   }
 });

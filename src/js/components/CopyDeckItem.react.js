@@ -7,9 +7,10 @@ var CopyDeckItemDiff = require('./CopyDeckItemDiff.react');
 var CopyDeckItem = React.createClass({
 
   propTypes: {
-    project: ReactPropTypes.object.isRequired,
     copyItem: ReactPropTypes.object.isRequired,
-    copyKey: ReactPropTypes.string.isRequired
+    copyKey: ReactPropTypes.string.isRequired,
+    project: ReactPropTypes.object.isRequired,
+    diffVisible: ReactPropTypes.bool
   },
 
   getInitialState: function() {
@@ -37,12 +38,11 @@ var CopyDeckItem = React.createClass({
       if (!values[language]) values[language] = {val: ""};
       if (values[language].val) labelClass = "active";
 
-      if (copy.copy) console.log(copy.copy[language]);
-
       if (copy.copy && copy.copy[language]) previousVal = copy.copy[language].previousVal;
 
       inputs.push(
         <td key={inputName}>
+          <div className="clean-value" onClick={_this._onEdit}>{values[language].val}</div>
           <div className="input-field">
             <textarea
               value={values[language].val}
@@ -51,13 +51,16 @@ var CopyDeckItem = React.createClass({
               onChange={_this._onChange}
               data-id={_this.props.copyKey}
               data-lang={language}
+              onBlur={_this._onCloseEdit}
             />
             <label htmlFor="{inputName}" className={labelClass}>{language}</label>
           </div>
           <CopyDeckItemDiff
-            val={values[language].val}
+            key={inputName}
+            id={inputName}
             previousVal={previousVal}
-          />
+            isVisible={_this.props.diffVisible}
+          >{values[language].val}</CopyDeckItemDiff>
         </td>
       );
     });
@@ -106,6 +109,15 @@ var CopyDeckItem = React.createClass({
 
   _onDone: function() {
     CopyDeckActions.done(this.props.copyKey);
+  },
+
+  _onEdit: function(e) {
+    $(e.target).parents('td').addClass('edit').find('textarea').focus();
+  },
+
+  _onCloseEdit: function(e) {
+    console.log('close edit');
+    $(e.target).parents('td').removeClass('edit');
   }
 });
 

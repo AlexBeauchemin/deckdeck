@@ -1,28 +1,9 @@
-.copydeck-actions {
-  background-color: #fff;
-
-  &.row {
-    margin-bottom: 0;
-  }
-
-  input {
-    vertical-align: top;
-    width: calc(100% - 80px);
-  }
-
-  .waves-circle {
-    height: auto;
-    line-height: initial;
-    width: auto;
-  }
-
-  button {
-    margin-top: 10px;
-  }
-}
-
 .modal {
   padding: 24px 24px 0 24px;
+
+  .input-field:first-of-type {
+    margin-top: 30px;
+  }
 }
 
 textarea.materialize-textarea {
@@ -34,13 +15,14 @@ textarea.materialize-textarea {
   margin-bottom: 80px;
 
   thead {
-    display: none;
+    //display: none;
   }
 
   tr {
     td {
       border-radius: 0;
       padding: 5px;
+      position: relative;
     }
 
     &>td:first-child {
@@ -62,6 +44,20 @@ textarea.materialize-textarea {
       &>td:first-child {
         @extend .yellow;
       }
+    }
+
+    td.edit {
+      .clean-value {
+        display: none;
+      }
+
+      .input-field {
+        display: block;
+      }
+    }
+
+    .input-field {
+      display: none;
     }
   }
 

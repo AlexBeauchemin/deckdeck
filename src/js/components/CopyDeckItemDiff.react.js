@@ -6,8 +6,9 @@ var jsdiff = require('diff');
 var CopyDeckItemDiff = React.createClass({
 
   propTypes: {
-    val: ReactPropTypes.string,
-    previousVal: ReactPropTypes.string
+    id: ReactPropTypes.string,
+    previousVal: ReactPropTypes.string,
+    isVisible: ReactPropTypes.bool
   },
 
   /**
@@ -16,8 +17,10 @@ var CopyDeckItemDiff = React.createClass({
   render: function() /*object*/ {
     var diff,
       diffText = [],
-      val = this.props.val,
+      val = this.props.children,
       previousVal = this.props.previousVal;
+
+    if (!this.props.isVisible) return null;
 
     if (typeof previousVal == "undefined") return null;
     if (previousVal.localeCompare(val) === 0) return null;
@@ -34,7 +37,7 @@ var CopyDeckItemDiff = React.createClass({
     });
 
     return (
-      <div className="diff-text">{diffText}</div>
+      <div key={this.props.id} className="diff-text">{diffText}</div>
     );
   }
 });

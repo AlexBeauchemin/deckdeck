@@ -21321,7 +21321,7 @@ var CopyDeckActions = {
 module.exports = CopyDeckActions;
 
 
-},{"../constants/CopyDeckConstants":184,"../dispatcher/AppDispatcher":186}],172:[function(require,module,exports){
+},{"../constants/CopyDeckConstants":185,"../dispatcher/AppDispatcher":187}],172:[function(require,module,exports){
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 var ProjectConstants = require('../constants/ProjectConstants');
 
@@ -21351,7 +21351,7 @@ var ProjectActions = {
 module.exports = ProjectActions;
 
 
-},{"../constants/ProjectConstants":185,"../dispatcher/AppDispatcher":186}],173:[function(require,module,exports){
+},{"../constants/ProjectConstants":186,"../dispatcher/AppDispatcher":187}],173:[function(require,module,exports){
 var React = require('react');
 var App = require('./components/App.react');
 
@@ -21434,7 +21434,7 @@ var App = React.createClass({displayName: "App",
 module.exports = App;
 
 
-},{"../stores/CopyDeckStore":188,"../stores/ProjectStore":189,"./Header.react":178,"./MainSection.react":179,"react":170}],175:[function(require,module,exports){
+},{"../stores/CopyDeckStore":189,"../stores/ProjectStore":190,"./Header.react":179,"./MainSection.react":180,"react":170}],175:[function(require,module,exports){
 var React = require('react');
 
 var ModalNewCopy = require('./ModalNewCopy.react');
@@ -21442,7 +21442,11 @@ var ModalNewCopy = require('./ModalNewCopy.react');
 var CopyDeckAdd = React.createClass({displayName: "CopyDeckAdd",
 
   componentDidMount: function() {
-    $('.modal-trigger').leanModal();
+    $('.modal-trigger').leanModal({
+      ready: function(e) {
+        $('#new-copy').focus();
+      }
+    });
   },
 
   /**
@@ -21451,22 +21455,22 @@ var CopyDeckAdd = React.createClass({displayName: "CopyDeckAdd",
   render: function() /*object*/ {
     return (
       React.createElement("div", null, 
-        React.createElement("div", {className: "copydeck-actions"}, 
-          React.createElement("a", {className: "modal-trigger", href: "#addCopy"}, 
-            React.createElement("i", {className: "medium mdi-content-add-circle light-blue-text text-lighten-1 waves-effect waves-light waves-circle"})
+        React.createElement("div", {className: "copydeck-add"}, 
+          React.createElement("a", {className: "btn-round modal-trigger", href: "#addCopy"}, 
+            React.createElement("i", {className: "small mdi-content-add light-blue lighten-1 z-depth-1 btn-round white-text"})
           )
         ), 
 
         React.createElement(ModalNewCopy, null)
       )
     );
-  }
+  },
 });
 
 module.exports = CopyDeckAdd;
 
 
-},{"./ModalNewCopy.react":181,"react":170}],176:[function(require,module,exports){
+},{"./ModalNewCopy.react":182,"react":170}],176:[function(require,module,exports){
 var React = require('react');
 var ReactPropTypes = React.PropTypes;
 
@@ -21476,9 +21480,10 @@ var CopyDeckItemDiff = require('./CopyDeckItemDiff.react');
 var CopyDeckItem = React.createClass({displayName: "CopyDeckItem",
 
   propTypes: {
-    project: ReactPropTypes.object.isRequired,
     copyItem: ReactPropTypes.object.isRequired,
-    copyKey: ReactPropTypes.string.isRequired
+    copyKey: ReactPropTypes.string.isRequired,
+    project: ReactPropTypes.object.isRequired,
+    diffVisible: ReactPropTypes.bool
   },
 
   getInitialState: function() {
@@ -21506,12 +21511,11 @@ var CopyDeckItem = React.createClass({displayName: "CopyDeckItem",
       if (!values[language]) values[language] = {val: ""};
       if (values[language].val) labelClass = "active";
 
-      if (copy.copy) console.log(copy.copy[language]);
-
       if (copy.copy && copy.copy[language]) previousVal = copy.copy[language].previousVal;
 
       inputs.push(
         React.createElement("td", {key: inputName}, 
+          React.createElement("div", {className: "clean-value", onClick: _this._onEdit}, values[language].val), 
           React.createElement("div", {className: "input-field"}, 
             React.createElement("textarea", {
               value: values[language].val, 
@@ -21519,14 +21523,17 @@ var CopyDeckItem = React.createClass({displayName: "CopyDeckItem",
               className: "materialize-textarea", 
               onChange: _this._onChange, 
               "data-id": _this.props.copyKey, 
-              "data-lang": language}
+              "data-lang": language, 
+              onBlur: _this._onCloseEdit}
             ), 
             React.createElement("label", {htmlFor: "{inputName}", className: labelClass}, language)
           ), 
           React.createElement(CopyDeckItemDiff, {
-            val: values[language].val, 
-            previousVal: previousVal}
-          )
+            key: inputName, 
+            id: inputName, 
+            previousVal: previousVal, 
+            isVisible: _this.props.diffVisible
+          }, values[language].val)
         )
       );
     });
@@ -21575,6 +21582,15 @@ var CopyDeckItem = React.createClass({displayName: "CopyDeckItem",
 
   _onDone: function() {
     CopyDeckActions.done(this.props.copyKey);
+  },
+
+  _onEdit: function(e) {
+    $(e.target).parents('td').addClass('edit').find('textarea').focus();
+  },
+
+  _onCloseEdit: function(e) {
+    console.log('close edit');
+    $(e.target).parents('td').removeClass('edit');
   }
 });
 
@@ -21590,8 +21606,9 @@ var jsdiff = require('diff');
 var CopyDeckItemDiff = React.createClass({displayName: "CopyDeckItemDiff",
 
   propTypes: {
-    val: ReactPropTypes.string,
-    previousVal: ReactPropTypes.string
+    id: ReactPropTypes.string,
+    previousVal: ReactPropTypes.string,
+    isVisible: ReactPropTypes.bool
   },
 
   /**
@@ -21600,8 +21617,10 @@ var CopyDeckItemDiff = React.createClass({displayName: "CopyDeckItemDiff",
   render: function() /*object*/ {
     var diff,
       diffText = [],
-      val = this.props.val,
+      val = this.props.children,
       previousVal = this.props.previousVal;
+
+    if (!this.props.isVisible) return null;
 
     if (typeof previousVal == "undefined") return null;
     if (previousVal.localeCompare(val) === 0) return null;
@@ -21618,7 +21637,7 @@ var CopyDeckItemDiff = React.createClass({displayName: "CopyDeckItemDiff",
     });
 
     return (
-      React.createElement("div", {className: "diff-text"}, diffText)
+      React.createElement("div", {key: this.props.id, className: "diff-text"}, diffText)
     );
   }
 });
@@ -21627,6 +21646,41 @@ module.exports = CopyDeckItemDiff;
 
 
 },{"diff":1,"react":170}],178:[function(require,module,exports){
+var React = require('react');
+var ReactPropTypes = React.PropTypes;
+
+var CopyDeckMenu = React.createClass({displayName: "CopyDeckMenu",
+  propTypes: {
+    tabClick: ReactPropTypes.func.isRequired
+  },
+
+  shouldComponentUpdate: function() {
+    return false;
+  },
+
+  componentDidMount: function() {
+    $('main ul.tabs').tabs();
+  },
+
+  /**
+   * @return {object}
+   */
+  render: function() /*object*/ {
+    return (
+      React.createElement("ul", {className: "tabs z-depth-1"}, 
+        React.createElement("li", {className: "tab col s3"}, React.createElement("a", {href: "#", onClick: this.props.tabClick, "data-display-class": "all", className: "active"}, "All")), 
+        React.createElement("li", {className: "tab col s3"}, React.createElement("a", {href: "#", onClick: this.props.tabClick, "data-display-class": "new"}, "New")), 
+        React.createElement("li", {className: "tab col s3"}, React.createElement("a", {href: "#", onClick: this.props.tabClick, "data-display-class": "modified"}, "Modified")), 
+        React.createElement("li", {className: "tab col s3"}, React.createElement("a", {href: "#", onClick: this.props.tabClick, "data-display-class": "done"}, "Done"))
+      )
+    );
+  }
+});
+
+module.exports = CopyDeckMenu;
+
+
+},{"react":170}],179:[function(require,module,exports){
 var React = require('react/addons');
 var ReactPropTypes = React.PropTypes;
 
@@ -21661,7 +21715,11 @@ var Header = React.createClass({displayName: "Header",
     // Materialize binds
     $(".button-collapse").sideNav();
     //$('.collapsible').collapsible();
-    $('.modal-trigger').leanModal();
+    $('.modal-trigger').leanModal({
+      ready: function(e) {
+        $('#project-name').focus();
+      }
+    });
     $('.dropdown-button').dropdown({
       constrain_width: false,
       hover: false,
@@ -21764,11 +21822,12 @@ var Header = React.createClass({displayName: "Header",
 module.exports = Header;
 
 
-},{"../stores/ProjectStore":189,"./ModalDeleteProject.react":180,"./ModalNewProject.react":182,"./ProjectItem.react":183,"react/addons":9}],179:[function(require,module,exports){
+},{"../stores/ProjectStore":190,"./ModalDeleteProject.react":181,"./ModalNewProject.react":183,"./ProjectItem.react":184,"react/addons":9}],180:[function(require,module,exports){
 var React = require('react');
 var ReactPropTypes = React.PropTypes;
 var CopyDeckItem = require('./CopyDeckItem.react');
 var CopyDeckAdd = require('./CopyDeckAdd.react');
+var CopyDeckMenu = require('./CopyDeckMenu.react');
 
 var MainSection = React.createClass({displayName: "MainSection",
 
@@ -21778,13 +21837,15 @@ var MainSection = React.createClass({displayName: "MainSection",
     onDestroyProject: ReactPropTypes.func.isRequired
   },
 
-  componentDidUpdate: function() {
-    $('ul.tabs').tabs();
-  },
-
   getInitialState: function() {
+    var diffVisible = localStorage.getItem('diffVisible');
+
+    diffVisible = !!(diffVisible === true || diffVisible === "true");
+
     return {
-      displayClass: "all"
+      diffVisible: diffVisible,
+      displayClass: "all",
+      visibilityClass: "mdi-action-visibility-off"
     }
   },
 
@@ -21800,7 +21861,8 @@ var MainSection = React.createClass({displayName: "MainSection",
     var _copyDeck = this.props.copyDeck,
       _project = this.props.selectedProject,
       copyDeck = [],
-      tableHeaders = [];
+      tableHeaders = [],
+      iconClass = "light-blue-text text-lighten-1 " + this.state.visibilityClass;
 
     _project.languages.forEach(function(language) {
       tableHeaders.push(React.createElement("th", {key: language}, language));
@@ -21812,7 +21874,8 @@ var MainSection = React.createClass({displayName: "MainSection",
           key: key, 
           copyItem: _copyDeck[key], 
           copyKey: key, 
-          project: this.props.selectedProject}
+          project: this.props.selectedProject, 
+          diffVisible: this.state.diffVisible}
         )
       );
     }
@@ -21822,16 +21885,16 @@ var MainSection = React.createClass({displayName: "MainSection",
         React.createElement("div", {className: "container"}, 
           React.createElement("div", {className: "row"}, 
             React.createElement("div", {className: "col s12"}, 
-              React.createElement("h2", null, this.props.selectedProject.name), 
-
-              React.createElement("ul", {className: "tabs z-depth-1"}, 
-                React.createElement("li", {className: "tab col s3"}, React.createElement("a", {href: "#", onClick: this.tabClick, "data-display-class": "all", className: "active"}, "All")), 
-                React.createElement("li", {className: "tab col s3"}, React.createElement("a", {href: "#", onClick: this.tabClick, "data-display-class": "new"}, "New")), 
-                React.createElement("li", {className: "tab col s3"}, React.createElement("a", {href: "#", onClick: this.tabClick, "data-display-class": "modified"}, "Modified")), 
-                React.createElement("li", {className: "tab col s3"}, React.createElement("a", {href: "#", onClick: this.tabClick, "data-display-class": "done"}, "Done"))
+              React.createElement("h4", null, 
+                this.props.selectedProject.name, 
+                React.createElement("a", {href: "#", className: "right", onClick: this._toggleDiff, title: "Show diff for modified items"}, 
+                  React.createElement("i", {className: iconClass})
+                )
               ), 
 
-              React.createElement("table", {id: "project-data", className: "stripped responsive"}, 
+              React.createElement(CopyDeckMenu, {tabClick: this.tabClick}), 
+
+              React.createElement("table", {id: "project-data", className: "striped responsive"}, 
                 React.createElement("thead", null, 
                   React.createElement("tr", null, 
                     React.createElement("th", null), 
@@ -21856,13 +21919,26 @@ var MainSection = React.createClass({displayName: "MainSection",
     this.setState({
       displayClass: $(e.target).data('display-class')
     });
+  },
+
+  _toggleDiff: function() {
+    var visibilityClass = "mdi-action-visibility";
+
+    if (this.state.visibilityClass == "mdi-action-visibility") visibilityClass = "mdi-action-visibility-off";
+
+    localStorage.setItem('diffVisible', !this.state.diffVisible);
+
+    this.setState({
+      diffVisible: !this.state.diffVisible,
+      visibilityClass: visibilityClass
+    });
   }
 });
 
 module.exports = MainSection;
 
 
-},{"./CopyDeckAdd.react":175,"./CopyDeckItem.react":176,"react":170}],180:[function(require,module,exports){
+},{"./CopyDeckAdd.react":175,"./CopyDeckItem.react":176,"./CopyDeckMenu.react":178,"react":170}],181:[function(require,module,exports){
 var React = require('react');
 var ReactPropTypes = React.PropTypes;
 var ProjectActions = require('../actions/ProjectActions');
@@ -21904,7 +21980,7 @@ var ModalDeleteProject = React.createClass({displayName: "ModalDeleteProject",
 module.exports = ModalDeleteProject;
 
 
-},{"../actions/ProjectActions":172,"react":170}],181:[function(require,module,exports){
+},{"../actions/ProjectActions":172,"react":170}],182:[function(require,module,exports){
 var React = require('react');
 var CopyDeckActions = require('../actions/CopyDeckActions');
 
@@ -21980,7 +22056,7 @@ var ModalNewCopy = React.createClass({displayName: "ModalNewCopy",
 module.exports = ModalNewCopy;
 
 
-},{"../actions/CopyDeckActions":171,"react":170}],182:[function(require,module,exports){
+},{"../actions/CopyDeckActions":171,"react":170}],183:[function(require,module,exports){
 var React = require('react');
 var ProjectActions = require('../actions/ProjectActions');
 
@@ -22055,7 +22131,7 @@ var ModalNewProject = React.createClass({displayName: "ModalNewProject",
 module.exports = ModalNewProject;
 
 
-},{"../actions/ProjectActions":172,"react":170}],183:[function(require,module,exports){
+},{"../actions/ProjectActions":172,"react":170}],184:[function(require,module,exports){
 var React = require('react');
 var ReactPropTypes = React.PropTypes;
 
@@ -22094,7 +22170,7 @@ var ProjectItem = React.createClass({displayName: "ProjectItem",
 module.exports = ProjectItem;
 
 
-},{"react":170}],184:[function(require,module,exports){
+},{"react":170}],185:[function(require,module,exports){
 var keyMirror = require('keymirror');
 
 module.exports = keyMirror({
@@ -22105,7 +22181,7 @@ module.exports = keyMirror({
 });
 
 
-},{"keymirror":7}],185:[function(require,module,exports){
+},{"keymirror":7}],186:[function(require,module,exports){
 var keyMirror = require('keymirror');
 
 module.exports = keyMirror({
@@ -22114,7 +22190,7 @@ module.exports = keyMirror({
 });
 
 
-},{"keymirror":7}],186:[function(require,module,exports){
+},{"keymirror":7}],187:[function(require,module,exports){
 /*
  * Copyright (c) 2014, Facebook, Inc.
  * All rights reserved.
@@ -22133,7 +22209,7 @@ var Dispatcher = require('flux').Dispatcher;
 module.exports = new Dispatcher();
 
 
-},{"flux":2}],187:[function(require,module,exports){
+},{"flux":2}],188:[function(require,module,exports){
 (function (global){
 var Firebase = (typeof window !== "undefined" ? window.Firebase : typeof global !== "undefined" ? global.Firebase : null);
 
@@ -22144,7 +22220,7 @@ var firebaseConnection = new Firebase(baseUrl);
 module.exports = firebaseConnection;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],188:[function(require,module,exports){
+},{}],189:[function(require,module,exports){
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 var EventEmitter = require('events').EventEmitter;
 var CopyDeckConstants = require('../constants/CopyDeckConstants');
@@ -22342,7 +22418,7 @@ AppDispatcher.register(function(action) {
 module.exports = CopyDeckStore;
 
 
-},{"../constants/CopyDeckConstants":184,"../dispatcher/AppDispatcher":186,"../firebaseConnection":187,"events":5,"object-assign":8}],189:[function(require,module,exports){
+},{"../constants/CopyDeckConstants":185,"../dispatcher/AppDispatcher":187,"../firebaseConnection":188,"events":5,"object-assign":8}],190:[function(require,module,exports){
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 var EventEmitter = require('events').EventEmitter;
 var ProjectConstants = require('../constants/ProjectConstants');
@@ -22479,4 +22555,4 @@ AppDispatcher.register(function(action) {
 module.exports = ProjectStore;
 
 
-},{"../constants/ProjectConstants":185,"../dispatcher/AppDispatcher":186,"../firebaseConnection":187,"events":5,"object-assign":8}]},{},[173]);
+},{"../constants/ProjectConstants":186,"../dispatcher/AppDispatcher":187,"../firebaseConnection":188,"events":5,"object-assign":8}]},{},[173]);
