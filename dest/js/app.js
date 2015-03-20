@@ -21464,7 +21464,7 @@ var CopyDeckAdd = React.createClass({displayName: "CopyDeckAdd",
         React.createElement(ModalNewCopy, null)
       )
     );
-  },
+  }
 });
 
 module.exports = CopyDeckAdd;
@@ -21505,7 +21505,8 @@ var CopyDeckItem = React.createClass({displayName: "CopyDeckItem",
 
     languages.forEach(function(language) {
       var inputName = copy.key + '-' + language,
-        previousVal = "";
+        previousVal = "",
+        emptyClass = "";
 
       if (!values) values = {};
       if (!values[language]) values[language] = {val: ""};
@@ -21513,8 +21514,10 @@ var CopyDeckItem = React.createClass({displayName: "CopyDeckItem",
 
       if (copy.copy && copy.copy[language]) previousVal = copy.copy[language].previousVal;
 
+      if(values[language].val === "") emptyClass = "edit";
+
       inputs.push(
-        React.createElement("td", {key: inputName}, 
+        React.createElement("td", {key: inputName, className: emptyClass}, 
           React.createElement("div", {className: "clean-value", onClick: _this._onEdit}, values[language].val), 
           React.createElement("div", {className: "input-field"}, 
             React.createElement("textarea", {
@@ -21589,8 +21592,11 @@ var CopyDeckItem = React.createClass({displayName: "CopyDeckItem",
   },
 
   _onCloseEdit: function(e) {
-    console.log('close edit');
-    $(e.target).parents('td').removeClass('edit');
+    var $textarea = $(e.target);
+
+    if (!$textarea.val()) return;
+
+    $textarea.parents('td').removeClass('edit');
   }
 });
 
@@ -21984,7 +21990,8 @@ module.exports = ModalDeleteProject;
 var React = require('react');
 var CopyDeckActions = require('../actions/CopyDeckActions');
 
-var ENTER_KEY_CODE = 13;
+var ENTER_KEY_CODE = 13,
+  MODAL_ID = "addCopy";
 
 var ModalNewCopy = React.createClass({displayName: "ModalNewCopy",
 
@@ -21999,7 +22006,7 @@ var ModalNewCopy = React.createClass({displayName: "ModalNewCopy",
    */
   render: function() /*object*/ {
     return (
-      React.createElement("div", {id: "addCopy", className: "modal"}, 
+      React.createElement("div", {id: MODAL_ID, className: "modal"}, 
         React.createElement("div", {className: "modal-content"}, 
           React.createElement("h4", null, "Create copy"), 
           React.createElement("div", {className: "input-field"}, 
@@ -22048,6 +22055,7 @@ var ModalNewCopy = React.createClass({displayName: "ModalNewCopy",
   _onKeyDown: function(event) {
     if (event.keyCode === ENTER_KEY_CODE) {
       this._addCopy();
+      $('#' + MODAL_ID).closeModal();
     }
   }
 

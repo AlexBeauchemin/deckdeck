@@ -27,7 +27,7 @@ var CopyDeckAdd = React.createClass({
         <ModalNewCopy />
       </div>
     );
-  },
+  }
 });
 
 module.exports = CopyDeckAdd;

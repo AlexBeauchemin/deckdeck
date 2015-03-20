@@ -32,7 +32,8 @@ var CopyDeckItem = React.createClass({
 
     languages.forEach(function(language) {
       var inputName = copy.key + '-' + language,
-        previousVal = "";
+        previousVal = "",
+        emptyClass = "";
 
       if (!values) values = {};
       if (!values[language]) values[language] = {val: ""};
@@ -40,8 +41,10 @@ var CopyDeckItem = React.createClass({
 
       if (copy.copy && copy.copy[language]) previousVal = copy.copy[language].previousVal;
 
+      if(values[language].val === "") emptyClass = "edit";
+
       inputs.push(
-        <td key={inputName}>
+        <td key={inputName} className={emptyClass}>
           <div className="clean-value" onClick={_this._onEdit}>{values[language].val}</div>
           <div className="input-field">
             <textarea
@@ -116,8 +119,11 @@ var CopyDeckItem = React.createClass({
   },
 
   _onCloseEdit: function(e) {
-    console.log('close edit');
-    $(e.target).parents('td').removeClass('edit');
+    var $textarea = $(e.target);
+
+    if (!$textarea.val()) return;
+
+    $textarea.parents('td').removeClass('edit');
   }
 });
 

@@ -34,15 +34,34 @@
   }
 }
 
-nav {
-  .dropdown-button {
-    font-size: 43px;
-    font-size: 2.7rem;
-    height: 64px;
-    line-height: 64px;
+header {
+  nav {
+    ul, ul li {
+      height: 100%;
+    }
+
+    .dropdown-button {
+      font-size: 43px;
+      font-size: 2.7rem;
+      height: 64px;
+      line-height: 64px;
+    }
+
+    .brand-logo {
+      display: inline-block;
+      padding-left: 10px;
+      position: relative;
+      width: auto;
+    }
   }
 }
 
 #nav-dropdown-actions a {
   white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+  #slide-out {
+    top: 56px;
+  }
 }

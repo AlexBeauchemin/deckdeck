@@ -1,7 +1,8 @@
 var React = require('react');
 var CopyDeckActions = require('../actions/CopyDeckActions');
 
-var ENTER_KEY_CODE = 13;
+var ENTER_KEY_CODE = 13,
+  MODAL_ID = "addCopy";
 
 var ModalNewCopy = React.createClass({
 
@@ -16,7 +17,7 @@ var ModalNewCopy = React.createClass({
    */
   render: function() /*object*/ {
     return (
-      <div id="addCopy" className="modal">
+      <div id={MODAL_ID} className="modal">
         <div className="modal-content">
           <h4>Create copy</h4>
           <div className="input-field">
@@ -65,6 +66,7 @@ var ModalNewCopy = React.createClass({
   _onKeyDown: function(event) {
     if (event.keyCode === ENTER_KEY_CODE) {
       this._addCopy();
+      $('#' + MODAL_ID).closeModal();
     }
   }
 

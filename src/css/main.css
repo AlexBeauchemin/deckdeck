@@ -7802,14 +7802,26 @@ ul.side-nav .collapsible-body li.active, ul.side-nav.fixed .collapsible-body li.
     display: block;
     width: 100%; }
 
-nav .dropdown-button {
+header nav ul, header nav ul li {
+  height: 100%; }
+header nav .dropdown-button {
   font-size: 43px;
   font-size: 2.7rem;
   height: 64px;
   line-height: 64px; }
+header nav .brand-logo {
+  display: inline-block;
+  padding-left: 10px;
+  position: relative;
+  width: auto; }
 
 #nav-dropdown-actions a {
   white-space: nowrap; }
+
+@media (max-width: 600px) {
+  #slide-out {
+    top: 56px; }
+ }
 
 .modal {
   padding: 24px 24px 0 24px; }
