@@ -8,6 +8,7 @@
 
   li {
     display: block;
+    height: auto;
   }
 
   li:hover {
@@ -49,7 +50,7 @@ header {
 
     .brand-logo {
       display: inline-block;
-      padding-left: 10px;
+      padding: 0 10px;
       position: relative;
       width: auto;
     }
