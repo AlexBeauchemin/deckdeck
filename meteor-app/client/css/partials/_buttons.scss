@@ -1,0 +1,26 @@
+.btn-round {
+    border-radius: 50px;
+
+    &:hover {
+        .z-depth-1 {
+            transition: box-shadow 0.3s;
+            box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        }
+    }
+
+    i {
+        font-size: 23px;
+        font-size: 1.5rem;
+        padding: 16px;
+    }
+}
+
+.copydeck-add {
+    bottom: 2em;
+    position: fixed;
+    right: 3em;
+}
+
+.btn, .btn-flat {
+    &.light-blue { color: #fff; }
+}

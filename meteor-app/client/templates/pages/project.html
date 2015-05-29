@@ -1,0 +1,47 @@
+<template name="Project">
+    <div class="row">
+        <div class="col s12">
+            <h2>
+                {{project.name}}
+                <a href="#" class="right" title="Show diff for modified items" data-action="toggle-diff">
+                    <i class="light-blue-text text-lighten-1 mdi-action-visibility"></i>
+                </a>
+            </h2>
+
+            <ul class="tabs z-depth-1">
+                <li class="tab col s3"><a href="#" data-action="toggleState" data-display-class="all" class="active">All</a></li>
+                <li class="tab col s3"><a href="#" data-action="toggleState" data-display-class="new">New</a></li>
+                <li class="tab col s3"><a href="#" data-action="toggleState" data-display-class="modified">Modified</a></li>
+                <li class="tab col s3"><a href="#" data-action="toggleState" data-display-class="done">Done</a></li>
+            </ul>
+
+            {{#each sections}}
+                <h3>{{name}}</h3>
+                {{#if copy}}
+                    <table id="project-data" class="striped responsive">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>Key</th>
+
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                {{else}}
+                    <p>This section is empty</p>
+                {{/if}}
+            {{/each}}
+
+            <div class="copydeck-add">
+                <a class="btn-round modal-trigger" href="#addCopy">
+                    <i class="small mdi-content-add light-blue lighten-1 z-depth-1 btn-round white-text"></i>
+                </a>
+            </div>
+
+        </div>
+    </div>
+</template>

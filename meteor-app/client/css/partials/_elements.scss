@@ -1,0 +1,107 @@
+.modal {
+  max-width: 400px;
+
+  h1, h2, h3, h4, h5 {
+    text-align: center;
+  }
+}
+
+#project-data {
+  margin-bottom: 80px;
+
+  thead {
+    //display: none;
+  }
+
+  tr {
+    td {
+      border-radius: 0;
+      padding: 5px;
+      position: relative;
+    }
+
+    &>td:first-child {
+      @extend .red;
+      width: 10px;
+    }
+
+    &.done {
+      &>td:first-child {
+        @extend .green;
+      }
+
+      .action-done {
+        display: none;
+      }
+    }
+
+    &.modified {
+      &>td:first-child {
+        @extend .yellow;
+      }
+    }
+
+    td.edit {
+      .clean-value {
+        display: none;
+      }
+
+      .input-field {
+        display: block;
+      }
+    }
+
+    .input-field {
+      display: none;
+    }
+  }
+
+  tbody {
+    &.modified {
+      tr {
+        display: none;
+        &.modified { display: table-row; }
+      }
+    }
+
+    &.new {
+      tr {
+        display: none;
+        &.new { display: table-row; }
+      }
+    }
+
+    &.done {
+      tr {
+        display: none;
+        &.done { display: table-row; }
+      }
+    }
+  }
+}
+
+ul.tabs {
+  margin-bottom: 20px;
+
+  li.tab  a {
+    color: $colorBlue;
+
+    &:hover {
+      color: $colorLightBlue;
+    }
+  }
+
+  .indicator {
+    background-color: $colorBlue;
+  }
+}
+
+
+.spinner-blue,
+.spinner-blue-only {
+  border-color: $primary-color;
+}
+
+.loading {
+  margin-top: 100px;
+}

@@ -1,0 +1,82 @@
+#sidenav-overlay {
+  background-color: rgba(0, 0, 0, 0);
+}
+
+#slide-out {
+  height: calc(100% - 64px);
+  top: 64px;
+
+  li {
+    display: block;
+    height: auto;
+  }
+
+  li:hover {
+    background-color: $colorLightBlue;
+  }
+
+  li:active, li.active {
+    background-color: $colorBlue;
+    color: #fff;
+
+    a { color:#fff; }
+  }
+
+  .add-project {
+    &:hover, &:active {
+      background-color: #fff;
+    }
+
+    .btn {
+      color: #fff;
+      display: block;
+      width: 100%;
+    }
+  }
+}
+
+.navbar-fixed {
+  a:hover {
+    text-decoration: none;
+  }
+}
+
+header {
+  nav {
+    //ul, ul li {
+    //  height: 100%;
+    //}
+
+    &>ul, .logo {
+      height: 100%;
+    }
+
+    a.button-collapse.show-on-large {
+      display: inline-block !important;
+    }
+
+    .dropdown-button {
+      font-size: 43px;
+      font-size: 2.7rem;
+      height: 64px;
+      line-height: 64px;
+    }
+
+    .brand-logo {
+      display: inline-block;
+      padding: 0 10px;
+      position: relative;
+      width: auto;
+    }
+  }
+}
+
+#nav-dropdown-actions a {
+  white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+  #slide-out {
+    top: 56px;
+  }
+}

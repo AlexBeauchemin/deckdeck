@@ -1,0 +1,21 @@
+<template name="modalLogin">
+    <form id="modal-login" class="modal {{getSession "login-error"}}">
+        <div class="modal-content">
+            <h4>Login</h4>
+            <div class="input-field">
+                <input id="email" name="email" type="email"/>
+                <label for="email">Email</label>
+            </div>
+            <div class="input-field">
+                <input id="password" name="password" type="password"/>
+                <label for="password">Password</label>
+            </div>
+            <div class="input-field">
+                <button type="submit" class="waves-effect waves-blue btn light-blue lighten-1 full-width">Login</button>
+            </div>
+            <p class="center-align">
+                <a href="#">Forgot password</a>
+            </p>
+        </div>
+    </form>
+</template>

@@ -1,0 +1,13 @@
+a:hover {
+    text-decoration: underline;
+}
+
+.input-field.error {
+    label { color: $error-color; }
+    input { border-bottom: 1px solid $error-color; }
+}
+
+textarea.materialize-textarea {
+    margin-bottom: 0;
+    padding: 0.2rem 0;
+}

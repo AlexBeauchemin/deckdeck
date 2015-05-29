@@ -1,0 +1,22 @@
+<template name="modalSignup">
+    <form id="modal-signup" class="modal {{getSession "signup-error"}}">
+        <div class="modal-content">
+            <h4>Create account</h4>
+            <div class="input-field {{getSession "error.email"}}">
+                <input id="email" name="email" type="email"/>
+                <label for="email">Email</label>
+            </div>
+            <div class="input-field">
+                <input id="name" name="name" type="text"/>
+                <label for="name">Name</label>
+            </div>
+            <div class="input-field {{getSession "error.password"}}">
+                <input id="password" name="password" type="password"/>
+                <label for="password">Password</label>
+            </div>
+            <div class="input-field">
+                <button type="submit" class="waves-effect waves-blue btn light-blue lighten-1 full-width">Sign up</button>
+            </div>
+        </div>
+    </form>
+</template>
