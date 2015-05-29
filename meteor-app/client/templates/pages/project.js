@@ -1,5 +1,6 @@
 Template.Project.rendered = function() {
     $('ul.tabs').tabs();
+    $('.modal-trigger').leanModal();
 };
 
 Template.Project.events({

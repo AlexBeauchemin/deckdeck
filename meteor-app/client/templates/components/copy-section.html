@@ -1,0 +1,29 @@
+<template name="copySection">
+    <h3>
+        {{name}}
+        <a href="#" class="right" title="Delete section" data-action="delete-section">
+            <i class="red-text text-lighten-1 mdi-action-delete"></i>
+        </a>
+    </h3>
+    {{#if copy}}
+        <table id="project-data" class="striped responsive">
+            <thead>
+            <tr>
+                <th></th>
+                <th>Key</th>
+
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+                {{#each copy}}
+                    <td></td>
+                    <td>{{name}}</td>
+                    <td></td>
+                {{/each}}
+            </tbody>
+        </table>
+    {{else}}
+        <p>This section is empty</p>
+    {{/if}}
+</template>

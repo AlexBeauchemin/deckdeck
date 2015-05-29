@@ -1,0 +1,27 @@
+<template name="modalNewItem">
+    <form id="modal-new-item" class="modal">
+        <div class="modal-content">
+            <h4>Create New Item</h4>
+
+            <div class="input-field">
+                <select name="item-section" id="item-section">
+                    {{#each sections}}
+                        <option value="{{_id}}">{{name}}</option>
+                    {{/each}}
+                </select>
+                <label for="item-section">Choose a section</label>
+            </div>
+
+            <div class="input-field">
+                <label for="item-name">Name</label>
+                <input name="item-name" id="item-name" type="text" maxlength="50" />
+            </div>
+
+            <input type="hidden" name="project-id" value="{{projectId}}" />
+        </div>
+        <div class="modal-footer right-align">
+            <button type="submit" class="waves-effect waves-green btn-flat modal-action modal-close">Create</button>
+            <button type="button" class="waves-effect waves-green btn-flat modal-action modal-close">Cancel</button>
+        </div>
+    </form>
+</template>

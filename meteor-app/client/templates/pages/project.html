@@ -16,32 +16,17 @@
             </ul>
 
             {{#each sections}}
-                <h3>{{name}}</h3>
-                {{#if copy}}
-                    <table id="project-data" class="striped responsive">
-                        <thead>
-                        <tr>
-                            <th></th>
-                            <th>Key</th>
-
-                            <th></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-
-                        </tbody>
-                    </table>
-                {{else}}
-                    <p>This section is empty</p>
-                {{/if}}
+                {{> copySection}}
             {{/each}}
 
-            <div class="copydeck-add">
-                <a class="btn-round modal-trigger" href="#addCopy">
+            <div class="copydeck-new">
+                <a class="btn-round modal-trigger" href="#modal-new-item">
                     <i class="small mdi-content-add light-blue lighten-1 z-depth-1 btn-round white-text"></i>
                 </a>
             </div>
 
         </div>
     </div>
+
+    {{> modalNewItem }}
 </template>
