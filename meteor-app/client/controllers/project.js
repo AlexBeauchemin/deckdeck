@@ -23,6 +23,10 @@ ProjectController = RouteController.extend({
             projectId: this.params._id
         };
     },
+    onBeforeAction: function() {
+        Session.setDefault('showState', 'all');
+        this.next();
+    },
     waitOn: function () {
         return [
             Meteor.subscribe('projects'),

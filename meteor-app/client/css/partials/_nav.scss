@@ -51,6 +51,12 @@ header {
       height: 100%;
     }
 
+    .logo {
+      &:hover {
+        background-color: transparent;
+      }
+    }
+
     a.button-collapse.show-on-large {
       display: inline-block !important;
     }

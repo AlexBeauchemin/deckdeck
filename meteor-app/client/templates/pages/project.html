@@ -9,10 +9,10 @@
             </h2>
 
             <ul class="tabs z-depth-1">
-                <li class="tab col s3"><a href="#" data-action="toggleState" data-display-class="all" class="active">All</a></li>
-                <li class="tab col s3"><a href="#" data-action="toggleState" data-display-class="new">New</a></li>
-                <li class="tab col s3"><a href="#" data-action="toggleState" data-display-class="modified">Modified</a></li>
-                <li class="tab col s3"><a href="#" data-action="toggleState" data-display-class="done">Done</a></li>
+                <li class="tab col s3"><a href="#" data-action="toggle-state" data-state="all" class="{{isActive "all"}}">All</a></li>
+                <li class="tab col s3"><a href="#" data-action="toggle-state" data-state="new" class="{{isActive "new"}}">New</a></li>
+                <li class="tab col s3"><a href="#" data-action="toggle-state" data-state="modified" class="{{isActive "modified"}}">Modified</a></li>
+                <li class="tab col s3"><a href="#" data-action="toggle-state" data-state="done" class="{{isActive "done"}}">Done</a></li>
             </ul>
 
             {{#each sections}}
