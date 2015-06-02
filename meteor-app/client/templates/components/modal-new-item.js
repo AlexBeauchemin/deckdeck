@@ -7,13 +7,32 @@ Template.modalNewItem.events({
         event.preventDefault();
 
         var name = event.target["item-name"].value.trim(),
+            sectionName = event.target["section-name"].value.trim(),
             section =  event.target["item-section"].value,
             project = event.target["project-id"].value;
 
-        Meteor.call('addCopy', project, section, name, function(error, res) {
-            if (error) Materialize.toast(error.reason, 5000);
-        });
+        if (name) {
+            Meteor.call('addCopy', project, section, name, function (error, res) {
+                if (error) Materialize.toast(error.reason, 5000);
+                else event.target["item-name"].value = "";
+            });
+        }
 
-        event.target["item-name"].value = "";
+        if (sectionName) {
+            Meteor.call('addSection', project, sectionName, function (error, res) {
+                if (error) Materialize.toast(error.reason, 5000);
+                else event.target["section-name"].value = "";
+            });
+        }
+
+
+    },
+    'click [data-action="tab-item"]': function() {
+        $('#section-name').val('');
+        $('#item-name').trigger('click').focus();
+    },
+    'click [data-action="tab-section"]': function() {
+        $('#item-name').val('');
+        $('#section-name').trigger('click').focus();
     }
 });

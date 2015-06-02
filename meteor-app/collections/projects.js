@@ -27,6 +27,18 @@ if(Meteor.isServer) {
                 name: name || 'New project',
                 users: [Meteor.user()._id]
             });
+        },
+        removeProject: function(id) {
+            if(!Meteor.user()) return;
+
+            id = id.trim().substr(0,100);
+
+            var project = Projects.findOne({_id: id, users: Meteor.user()._id});
+            if (!project) return;
+
+            Projects.remove(id);
+            Sections.remove({project: id});
+            Copy.remove({project: id});
         }
     });
 }

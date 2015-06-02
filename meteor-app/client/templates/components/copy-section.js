@@ -68,5 +68,10 @@ Template.copySection.events({
         Meteor.call('removeCopy', $(e.currentTarget).data('id'), function(error, res) {
             if (error) Materialize.toast(error.reason, 5000);
         });
+    },
+    'click [data-action="delete-section"]': function(e) {
+        Meteor.call('removeSection', $(e.currentTarget).data('id'), function(error, res) {
+            if (error) Materialize.toast(error.reason, 5000);
+        });
     }
 });

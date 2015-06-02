@@ -1,12 +1,12 @@
 <template name="copySection">
-    <h3>
-        {{name}}
-        <a href="#" class="right" title="Delete section" data-action="delete-section">
-            <i class="red-text text-lighten-1 mdi-action-delete"></i>
-        </a>
-    </h3>
-    {{#if copy}}
-        <table class="section-data-table striped responsive {{getSession "showDiff"}}">
+    {{#if copy.count}}
+        <table class="section-data-table responsive z-depth-1 {{getSession "showDiff"}}">
+            <caption class="left-align">
+                {{name}}
+                <a href="#" class="right" title="Delete section" data-action="delete-section" data-id="{{_id}}">
+                    <i class="small red-text text-lighten-1 mdi-action-delete"></i>
+                </a>
+            </caption>
             <thead>
                 <tr>
                     <th></th>

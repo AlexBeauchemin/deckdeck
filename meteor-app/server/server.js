@@ -1,5 +1,6 @@
 Meteor.startup(function () {
     Sections._ensureIndex({ "project": 1});
+    Copy._ensureIndex({ "project": 1});
 });
 
 Accounts.validateNewUser(function (user) {

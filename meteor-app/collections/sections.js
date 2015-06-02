@@ -26,6 +26,20 @@ if(Meteor.isServer) {
                 name: name || 'Default',
                 project: projectId
             });
+        },
+        removeSection: function(id) {
+            if(!Meteor.user()) return;
+
+            id = id.trim().substr(0,100);
+
+            var section = Sections.findOne(id);
+            if (!section) return;
+
+            var project = Projects.findOne({_id: section.project, users: Meteor.user()._id});
+            if (!project) return;
+
+            Sections.remove(id);
+            Copy.remove({section: id});
         }
     });
 }

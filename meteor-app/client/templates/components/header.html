@@ -3,9 +3,11 @@
         <nav class="light-blue lighten-1" role="navigation">
             <ul class="left">
 
+                {{#if projects.count}}
                 <li class="hide-on-large-only {{conditionalClass currentUser "" "hidden"}}">
                     <a href="#" data-activates="slide-out" class="button-collapse show-on-large"><i class="mdi-navigation-menu"></i></a>
                 </li>
+                {{/if}}
                 <li class="logo">
                     <a href="/" class="brand-logo">DeckDeck</a>
                 </li>
@@ -18,7 +20,9 @@
                     <ul id="nav-dropdown-actions" class='dropdown-content'>
                         {{#if currentUser}}
                             <li><a href="#modal-new-project" data-action="open-create-modal">New project</a></li>
-                            <li><a href="#modal-delete-project" data-action="open-delete-modal">Delete project</a></li>
+                            {{#if project}}
+                                <li><a href="#modal-delete-project" data-action="open-delete-modal">Delete project</a></li>
+                            {{/if}}
                             <li><a href="#" data-action="logout">Log out</a></li>
                         {{else}}
                             <li><a href="#modal-login" data-action="open-login-modal">Login</a></li>
@@ -28,12 +32,14 @@
                 </li>
             </ul>
 
+            {{#if projects.count}}
+                <ul id="slide-out" class="side-nav fixed {{conditionalClass currentUser "" "hidden"}}">
+                    {{#each projects}}
+                        <li class="{{isActive _id}}"><a href="/project/{{_id}}">{{name}}</a></li>
+                    {{/each}}
+                </ul>
+            {{/if}}
 
-            <ul id="slide-out" class="side-nav fixed {{conditionalClass currentUser "" "hidden"}}">
-                {{#each projects}}
-                    <li class="{{isActive _id}}"><a href="/project/{{_id}}">{{name}}</a></li>
-                {{/each}}
-            </ul>
         </nav>
     </div>
 </template>

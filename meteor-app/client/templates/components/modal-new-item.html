@@ -1,6 +1,10 @@
 <template name="modalNewItem">
     <form id="modal-new-item" class="modal">
-        <div class="modal-content">
+        <ul class="tabs">
+            <li class="tab col s6"><a href="#new-item" class="active" data-action="tab-item">New Item</a></li>
+            <li class="tab col s6"><a href="#new-section" data-action="tab-section">New Section</a></li>
+        </ul>
+        <div class="modal-content" id="new-item">
             <h4>Create New Item</h4>
 
             <div class="input-field">
@@ -13,13 +17,19 @@
             </div>
 
             <div class="input-field">
-                <label for="item-name">Name</label>
+                <label for="item-name" class="active">Name</label>
                 <input name="item-name" id="item-name" type="text" maxlength="50" />
             </div>
-
-            <input type="hidden" name="project-id" value="{{projectId}}" />
+        </div>
+        <div class="modal-content" id="new-section">
+            <h4>Create New Section</h4>
+            <div class="input-field">
+                <label for="section-name" class="active">Name</label>
+                <input name="section-name" id="section-name" type="text" maxlength="50" />
+            </div>
         </div>
         <div class="modal-footer right-align">
+            <input type="hidden" name="project-id" value="{{projectId}}" />
             <button type="submit" class="waves-effect waves-green btn-flat modal-action modal-close">Create</button>
             <button type="button" class="waves-effect waves-green btn-flat modal-action modal-close">Cancel</button>
         </div>
