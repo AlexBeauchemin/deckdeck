@@ -11,11 +11,11 @@
     height: auto;
   }
 
-  li:hover {
+  li:hover, li:active {
     background-color: $colorLightBlue;
   }
 
-  li:active, li.active {
+  li.active {
     background-color: $colorBlue;
     color: #fff;
 

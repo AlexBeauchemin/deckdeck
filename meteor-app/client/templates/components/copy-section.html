@@ -2,7 +2,10 @@
     {{#if copy.count}}
         <table class="section-data-table responsive z-depth-1 {{getSession "showDiff"}}">
             <caption class="left-align">
-                {{name}}
+                <a href="#" class="left" data-action="expand-section">
+                    <i class="small mdi-navigation-expand-less"></i>
+                    {{name}}
+                </a>
                 <a href="#" class="right" title="Delete section" data-action="delete-section" data-id="{{_id}}">
                     <i class="small red-text text-lighten-1 mdi-action-delete"></i>
                 </a>
@@ -42,6 +45,19 @@
             </tbody>
         </table>
     {{else}}
-        <p>This section is empty</p>
+        <table class="section-data-table empty responsive z-depth-1">
+            <caption class="left-align">
+                {{name}}
+                <a href="#" class="right" title="Delete section" data-action="delete-section" data-id="{{_id}}">
+                    <i class="small red-text text-lighten-1 mdi-action-delete"></i>
+                </a>
+            </caption>
+            <thead>
+                <tr>
+                    <th class="center-align">This section is empty</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
     {{/if}}
 </template>

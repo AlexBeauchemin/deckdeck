@@ -5,7 +5,7 @@ ProjectController = RouteController.extend({
     },
     data: function() {
         var projectId = this.params._id,
-            sections = Sections.find({project: projectId}),
+            sections = Sections.find({project: projectId}, {sort: {dateCreated: 1}}),
             data = [];
 
         sections.fetch().forEach(function(section) {

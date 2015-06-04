@@ -73,5 +73,10 @@ Template.copySection.events({
         Meteor.call('removeSection', $(e.currentTarget).data('id'), function(error, res) {
             if (error) Materialize.toast(error.reason, 5000);
         });
+    },
+    'click [data-action="expand-section"]': function(e) {
+        var $table = $(e.currentTarget).parents('table');
+
+        $table.toggleClass('contract');
     }
 });

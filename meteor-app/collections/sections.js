@@ -24,7 +24,8 @@ if(Meteor.isServer) {
 
             return Sections.insert({
                 name: name || 'Default',
-                project: projectId
+                project: projectId,
+                dateCreated: new Date()
             });
         },
         removeSection: function(id) {

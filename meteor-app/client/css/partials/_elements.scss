@@ -17,20 +17,41 @@
   }
 }
 
+.section-data-empty {
+  margin-bottom: 80px;
+}
+
 .section-data-table {
   background-color: #fff;
   margin-bottom: 80px;
   margin-top: 50px;
 
-  caption {
-    color: #999;
-    line-height: 40px;
-    padding-left: 30px;
+  &:hover {
+    caption .right {
+      visibility: visible;
+    }
   }
 
   thead,
   thead tr th {
     border: none;
+  }
+
+  caption, caption a {
+    color: #999;
+    font-size: 20px;
+    line-height: 45px;
+    vertical-align: top;
+
+    .right {
+      visibility: hidden;
+    }
+
+    a:hover, a:active { text-decoration: none; }
+    a i {
+      display: inline-block;
+      transition: transform 0.3s;
+    }
   }
 
   tr {
@@ -112,6 +133,29 @@
   &.show-diff {
     .diff-text { display: block; }
     .clean-value { display: none; }
+  }
+
+  &.empty {
+    tr th {
+      padding: 15px 0;
+    }
+
+    caption {
+      padding-left: 30px;
+    }
+  }
+
+  &.contract {
+    margin-bottom: 0;
+
+    tbody, thead { display: none; }
+    caption {
+      a:first-child {
+        i {
+          transform: rotate(180deg);
+        }
+      }
+    }
   }
 }
 
