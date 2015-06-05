@@ -1,45 +1,41 @@
 <template name="copySection">
     {{#if copy.count}}
-        <table class="section-data-table responsive z-depth-1 {{getSession "showDiff"}}">
-            <caption class="left-align">
-                <a href="#" class="left" data-action="expand-section">
+        <div class="section-data-table">
+            <h2>
+                <a href="#" data-action="expand-section">
                     <i class="small mdi-navigation-expand-less"></i>
                     {{name}}
                 </a>
                 <a href="#" class="right" title="Delete section" data-action="delete-section" data-id="{{_id}}">
                     <i class="small red-text text-lighten-1 mdi-action-delete"></i>
                 </a>
-            </caption>
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>Key</th>
+            </h2>
+            <ul class="collection z-depth-1">
+                <li class="collection-header">
+                    <div class="color"></div>
+                    <div class="key">Key</div>
                     {{#each ../project.languages}}
-                        <th>{{this}}</th>
+                        <div class="item">{{this}}</div>
                     {{/each}}
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
+                </li>
                 {{#each copy}}
-                    {{> copyItem}}
+                    {{> copyItem2}}
                 {{/each}}
-            </tbody>
-        </table>
+            </ul>
+        </div>
     {{else}}
-        <table class="section-data-table empty responsive z-depth-1">
-            <caption class="left-align">
+        <div class="section-data-table empty">
+            <h2>
                 {{name}}
                 <a href="#" class="right" title="Delete section" data-action="delete-section" data-id="{{_id}}">
                     <i class="small red-text text-lighten-1 mdi-action-delete"></i>
                 </a>
-            </caption>
-            <thead>
-                <tr>
-                    <th class="center-align">This section is empty</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
+            </h2>
+            <ul class="collection z-depth-1">
+                <li class="collection-header">
+                    <p class="center-align">This section is empty</p>
+                </li>
+            </ul>
+        </div>
     {{/if}}
 </template>

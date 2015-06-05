@@ -39,8 +39,7 @@ Template.copySection.events({
         });
     },
     'click [data-action="expand-section"]': function(e) {
-        var $table = $(e.currentTarget).parents('table');
-
-        $table.toggleClass('contract');
+        var $list = $(e.currentTarget).parents('.section-data-table');
+        $list.toggleClass('contract');
     }
 });

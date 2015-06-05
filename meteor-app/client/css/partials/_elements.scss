@@ -22,109 +22,119 @@
 }
 
 .section-data-table {
-  background-color: #fff;
   margin-bottom: 80px;
   margin-top: 50px;
 
   &:hover {
-    caption .right {
+    h2 .right {
       visibility: visible;
     }
   }
 
-  thead,
-  thead tr th {
-    border: none;
-  }
-
-  caption, caption a {
+  h2 {
     color: #999;
     font-size: 20px;
     line-height: 45px;
+    margin: 0;
     vertical-align: top;
+    width: 100%;
 
     .right {
       visibility: hidden;
     }
 
-    a:hover, a:active { text-decoration: none; }
-    a i {
-      display: inline-block;
-      transition: transform 0.3s;
+    a {
+      color: #999;
+      font-size: 20px;
+      line-height: 45px;
+
+      &:hover, &:active { text-decoration: none; }
+      
+      i {
+        display: inline-block;
+        transition: transform 0.3s;
+      }
     }
   }
 
-  tr {
-    td, th {
-      border-top: 1px solid #ccc;
-      border-radius: 0;
-      padding: 5px 20px;
+  .collection {
+    background-color: #fff;
+    border: none;
+
+    .collection-item, .collection-header {
+      border-bottom: none;
+      border-top: 1px solid #e0e0e0;
+      padding-right: 10px;
       position: relative;
-    }
 
-    &>td:first-child,
-    &>th:first-child {
-      border-top: none;
-      @extend .red;
-      padding: 5px;
-      width: 10px;
-    }
-
-    &>th:first-child {
-      background-color: transparent !important;
-    }
-
-    &.done {
-      &>td:first-child {
-        @extend .green;
+      &>div {
+        display: inline-block;
+        vertical-align: top;
       }
 
-      .action-done {
-        display: none;
+      &.done {
+        .color {
+          @extend .green;
+        }
+
+        .action-done {
+          display: none;
+        }
       }
-    }
 
-    &.modified {
-      &>td:first-child {
-        @extend .yellow;
+      &.modified {
+        .color {
+          @extend .yellow;
+        }
       }
-    }
 
-    .input-field {
-      display: none;
-    }
+      &.new {
 
-    .empty, .edit {
-      .clean-value,
-      .diff-text {
-        display: none;
       }
 
       .input-field {
-        display: block;
+        display: none;
+        margin-top: 0;
+      }
+
+      .empty, .edit {
+        .clean-value,
+        .diff-text {
+          display: none;
+        }
+
+        .input-field {
+          display: block;
+        }
+      }
+
+      .color {
+        @extend .red;
+
+        bottom: 0;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 10px;
+      }
+
+      .key {
+        width: 200px;
+      }
+
+      .item {
+        padding-left: 20px;
+        padding-right: 0;
+        width: calc((100% - 210px)/2);
       }
     }
-  }
 
-  tbody {
-    &.modified {
-      tr {
-        display: none;
-        &.modified { display: table-row; }
-      }
-    }
+    .collection-header {
+      font-weight: bold;
+      padding: 15px 0 15px 20px;
 
-    &.new {
-      tr {
-        display: none;
-        &.new { display: table-row; }
-      }
-    }
-
-    &.done {
-      tr {
-        display: none;
-        &.done { display: table-row; }
+      .color {
+        background-color: transparent !important;
       }
     }
   }
@@ -136,11 +146,7 @@
   }
 
   &.empty {
-    tr th {
-      padding: 15px 0;
-    }
-
-    caption {
+    h2 {
       padding-left: 30px;
     }
   }
@@ -148,8 +154,8 @@
   &.contract {
     margin-bottom: 0;
 
-    tbody, thead { display: none; }
-    caption {
+    ul { display: none; }
+    h2 {
       a:first-child {
         i {
           transform: rotate(180deg);
