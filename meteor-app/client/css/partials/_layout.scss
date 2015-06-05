@@ -2,6 +2,10 @@ html {
     background-color: rgb(245, 245, 245);
 }
 
+main {
+    padding-top: 30px;
+}
+
 @media (min-width: $medium-screen) {
   /*header, main, footer {
       padding-left: $sidenav-width;

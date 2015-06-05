@@ -1,13 +1,6 @@
 <template name="Project">
     <div class="row">
         <div class="col s12">
-            <h2>
-                {{project.name}}
-                <a href="#" class="right" title="Show diff for modified items" data-action="toggle-diff">
-                    <i class="light-blue-text text-lighten-1 mdi-action-visibility"></i>
-                </a>
-            </h2>
-
             <ul class="tabs z-depth-1">
                 <li class="tab col s3"><a href="#" data-action="toggle-state" data-state="all" class="{{isActive "all"}}">All</a></li>
                 <li class="tab col s3"><a href="#" data-action="toggle-state" data-state="new" class="{{isActive "new"}}">New</a></li>

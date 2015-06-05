@@ -43,9 +43,18 @@
 
 header {
   nav {
-    //ul, ul li {
-    //  height: 100%;
-    //}
+    h2 {
+      display: inline-block;
+      font-size: 26px;
+      font-size: 1.8rem;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      vertical-align: middle;
+      white-space: nowrap;
+      width: 100%;
+    }
 
     &>ul, .logo {
       height: 100%;
@@ -73,6 +82,10 @@ header {
       padding: 0 10px;
       position: relative;
       width: auto;
+    }
+
+    .right li {
+      height: 100%;
     }
   }
 }

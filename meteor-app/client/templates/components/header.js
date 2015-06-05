@@ -11,10 +11,8 @@ Template.Header.events({
     },
     'click [data-action="logout"]': function() {
         Meteor.logout(function(error) {
-            if (error) {
-                Session.set('signup-error', 'error shake');
-                Materialize.toast(error.reason, 5000);
-            }
+            if (error) Materialize.toast(error.reason, 5000);
+            else Router.go('home');
         });
     },
     'click [data-action="open-create-modal"]': function() {
@@ -24,6 +22,15 @@ Template.Header.events({
     },
     'click [data-action="open-delete-modal"]': function() {
         $('#modal-delete-project').openModal();
+        return false;
+    },
+    'click [data-action="toggle-diff"]': function(e) {
+        //TODO: Use dynamic vars instead
+        $(e.currentTarget).find('i').toggleClass('mdi-action-visibility').toggleClass('mdi-action-visibility-off');
+
+        if (Session.get('showDiff')) Session.set('showDiff', null);
+        else Session.set('showDiff', 'show-diff');
+
         return false;
     }
 });
