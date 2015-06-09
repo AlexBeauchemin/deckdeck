@@ -28,7 +28,8 @@ if(Meteor.isServer) {
                 section: sectionId,
                 state: "new",
                 info: "",
-                copy: {}
+                lastEdited: Meteor.user().profile.name,
+                data: {}
             });
         },
         updateCopy: function(id, lang, val) {
@@ -42,18 +43,18 @@ if(Meteor.isServer) {
 
             val = val.trim().substr(0,1000);
 
-            if (!copy.copy[lang]) {
-                copy.copy[lang] = {
+            if (!copy.data[lang]) {
+                copy.data[lang] = {
                     val: val,
                     previousVal: val
                 };
             }else {
-                copy.copy[lang].val = val;
+                copy.data[lang].val = val;
             }
 
             if (copy.state === "done") copy.state = "modified";
 
-            return Copy.update({_id: id}, {$set: { copy: copy.copy, state: copy.state }});
+            return Copy.update({_id: id}, {$set: { data: copy.data, state: copy.state }});
         },
         updateCopyState: function(id, state) {
             if(!Meteor.user()) return;
@@ -66,9 +67,9 @@ if(Meteor.isServer) {
 
             if (state === "done") {
                 project.languages.forEach(function(lang) {
-                    copy.copy[lang].previousVal = copy.copy[lang].val
+                    copy.data[lang].previousVal = copy.data[lang].val
                 });
-                return Copy.update({_id: id}, {$set: { copy: copy.copy, state: 'done' }});
+                return Copy.update({_id: id}, {$set: { data: copy.data, state: 'done' }});
             }
         },
         removeCopy: function(id) {

@@ -1,12 +1,18 @@
 Template.Header.events({
     'click [data-action="open-signup-modal"]': function() {
+        var $modal = $('#modal-signup');
+
         Session.set('signup-error', null);
-        $('#modal-signup').openModal();
+        $modal.openModal();
+        $modal.find('input').first().trigger('click').trigger('focus');
         return false;
     },
     'click [data-action="open-login-modal"]': function() {
+        var $modal = $('#modal-login');
+
         Session.set('login-error', null);
-        $('#modal-login').openModal();
+        $modal.openModal();
+        $modal.find('input').first().trigger('click').trigger('focus');
         return false;
     },
     'click [data-action="logout"]': function() {
@@ -16,8 +22,10 @@ Template.Header.events({
         });
     },
     'click [data-action="open-create-modal"]': function() {
+        var $modal = $('#modal-new-project');
         Session.set('create-project-error', null);
-        $('#modal-new-project').openModal();
+        $modal.openModal();
+        $modal.find('input').first().trigger('click').trigger('focus');
         return false;
     },
     'click [data-action="open-delete-modal"]': function() {

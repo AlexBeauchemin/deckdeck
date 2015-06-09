@@ -4,12 +4,12 @@ Template.copySection.rendered = function() {
 
 Template.copySection.events({
     'click [data-action="toggleInput"]': function(e) {
-        $(e.currentTarget).parent()
-            .addClass('edit')
-            .find('label')
-            .trigger('click')
-            .trigger('focus');
+        var $parent = $(e.currentTarget).parent();
+
         //Can replace trigger click + trigger focus by adding "active" class on label (see materializecss doc)
+        $parent.addClass('edit');
+        $parent.find('textarea').trigger('focus').trigger('click');
+        //$parent.find('label').addClass('active');
     },
     'blur textarea': function(e) {
         var $input = $(e.currentTarget),

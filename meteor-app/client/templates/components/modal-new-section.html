@@ -1,0 +1,16 @@
+<template name="modalNewSection">
+    <form id="modal-new-section" class="modal">
+        <div class="modal-content">
+            <h4>Create New Section</h4>
+            <div class="input-field">
+                <label for="section-name" class="active">Name</label>
+                <input name="section-name" id="section-name" type="text" maxlength="50" />
+            </div>
+        </div>
+        <div class="modal-footer right-align">
+            <input type="hidden" name="project-id" value="{{projectId}}" />
+            <button type="submit" class="waves-effect btn-flat modal-action">Create</button>
+            <button type="button" class="waves-effect btn-flat modal-action modal-close">Cancel</button>
+        </div>
+    </form>
+</template>

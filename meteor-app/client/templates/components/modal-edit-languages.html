@@ -1,0 +1,22 @@
+<template name="modalEditLanguages">
+    <form id="modal-edit-languages" class="modal">
+        <div class="modal-content">
+            <h4>Remove Languages</h4>
+            <div class="center-align space-bottom">
+                {{#each project.languages}}
+                    <a class="waves-effect waves-light btn" data-action="remove-language" data-project="{{../projectId}}"><i class="mdi-content-backspace right"></i>{{this}}</a>
+                {{/each}}
+            </div>
+            <h4>Add Language</h4>
+            <div class="input-field">
+                <label for="language-name" class="active">Name</label>
+                <input name="language-name" id="language-name" type="text" maxlength="20" />
+            </div>
+        </div>
+        <div class="modal-footer right-align">
+            <input type="hidden" name="project-id" value="{{projectId}}" />
+            <button type="submit" class="waves-effect btn-flat modal-action">Add</button>
+            <button type="button" class="waves-effect btn-flat modal-action modal-close">Cancel</button>
+        </div>
+    </form>
+</template>

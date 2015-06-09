@@ -1,21 +1,22 @@
 <template name="copyItem">
-    <tr class="{{state}}">
-        <td></td>
-        <td>{{name}}</td>
+    <li class="collection-item {{state}}">
+        <div class="color"></div>
+        <div class="key">{{name}}</div>
         {{#each ../../project.languages}}
-            <td class="{{getTextareaState ../copy this}}">
-                <div class="clean-value" data-action="toggleInput"><i class="right tiny mdi-editor-mode-edit"></i>{{getCopy ../copy this}}</div>
+            <div class="item {{getTextareaState ../data this}}">
+                <div class="clean-value" data-action="toggleInput"><i class="right tiny mdi-editor-mode-edit"></i>{{getCopy ../data this}}</div>
                 <div class="input-field">
-                    <textarea class="materialize-textarea" name="{{../_id}}-{{this}}" id="{{../_id}}-{{this}}">{{getCopyRaw ../copy this}}</textarea>
+                    <textarea class="materialize-textarea" name="{{../_id}}-{{this}}" id="{{../_id}}-{{this}}">{{getCopyRaw ../data this}}</textarea>
                     <!--<label for="{{../_id}}-{{this}}">{{this}}</label>-->
                 </div>
-                <div data-id="{{../copy._id}}" class="diff-text" data-action="toggleInput"><i class="right tiny mdi-editor-mode-edit"></i>{{{getDiffText ../copy this}}}</div>
-            </td>
+                <div class="diff-text" data-action="toggleInput"><i class="right tiny mdi-editor-mode-edit"></i>{{{getDiffText ../data this}}}</div>
+            </div>
         {{/each}}
-        <td class="right-align">
+        <div class="actions">
             <a href="#editInfo" class="modal-trigger"><i class="small mdi-action-info-outline light-blue-text text-lighten-1"></i></a>
             <a href="#" class="action-done" data-action="copy-done" data-id="{{_id}}"><i class="small mdi-action-done green-text"></i></a>
             <a href="#" class="action-clear" data-action="copy-remove" data-id="{{_id}}"><i class="small mdi-content-clear red-text"></i></a>
-        </td>
-    </tr>
+        </div>
+    </li>
+
 </template>

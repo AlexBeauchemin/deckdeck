@@ -27,7 +27,8 @@
 
   &:hover {
     h2 .right {
-      visibility: visible;
+      opacity: 1;
+      transform: translateY(0);
     }
   }
 
@@ -40,7 +41,9 @@
     width: 100%;
 
     .right {
-      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.2s, transform 0.2s;
+      transform: translateY(50px);
     }
 
     a {
@@ -49,7 +52,7 @@
       line-height: 45px;
 
       &:hover, &:active { text-decoration: none; }
-      
+
       i {
         display: inline-block;
         transition: transform 0.3s;
@@ -61,11 +64,42 @@
     background-color: #fff;
     border: none;
 
+    .collection-item {
+      &:hover {
+        .actions {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      .key {
+        margin-top: 6px;
+      }
+
+      .actions {
+        background-color: rgba(255,255,255,0.8);
+        overflow: hidden;
+        opacity: 0;
+        padding: 10px 5px 5px 5px;
+        position: absolute;
+        right: 0;
+        top: 5px;
+        transform: translateX(100%);
+        transition: transform 0.2s, opacity 0.2s;
+        white-space: nowrap;
+      }
+    }
+
     .collection-item, .collection-header {
       border-bottom: none;
       border-top: 1px solid #e0e0e0;
       padding-right: 10px;
       position: relative;
+
+      textarea {
+        height: 1rem;
+        min-height: 1rem;
+      }
 
       &>div {
         display: inline-block;
@@ -90,6 +124,11 @@
 
       &.new {
 
+      }
+
+      .clean-value, .diff-text {
+        margin: 3px 0 4px 0;
+        padding: 0.2rem 0;
       }
 
       .input-field {
@@ -142,7 +181,7 @@
   .diff-text { display: none; }
   &.show-diff {
     .diff-text { display: block; }
-    .clean-value { display: none; }
+    .clean-value { display: none !important; }
   }
 
   &.empty {

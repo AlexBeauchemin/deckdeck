@@ -1,6 +1,6 @@
 <template name="copySection">
     {{#if copy.count}}
-        <div class="section-data-table">
+        <div class="section-data-table {{getSession "showDiff"}}">
             <h2>
                 <a href="#" data-action="expand-section">
                     <i class="small mdi-navigation-expand-less"></i>
@@ -19,7 +19,7 @@
                     {{/each}}
                 </li>
                 {{#each copy}}
-                    {{> copyItem2}}
+                    {{> copyItem}}
                 {{/each}}
             </ul>
         </div>

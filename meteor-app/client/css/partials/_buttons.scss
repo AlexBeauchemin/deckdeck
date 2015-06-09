@@ -1,26 +1,37 @@
-.btn-round {
-    border-radius: 50px;
+.fixed-action-btn {
+    li {
+        position: relative;
 
-    &:hover {
-        .z-depth-1 {
-            transition: box-shadow 0.3s;
-            box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        &:hover {
+            span {
+                opacity: 1;
+            }
         }
     }
 
-    i {
-        font-size: 23px;
-        font-size: 1.5rem;
-        padding: 16px;
-    }
-}
+    span {
+        @extend .grey;
+        @extend .darken-4;
+        @extend .grey-text;
+        @extend .text-lighten-5;
 
-.copydeck-new {
-    bottom: 2em;
-    position: fixed;
-    right: 3em;
+        border-radius: 3px;
+        color: #fff;
+        left: 0;
+        opacity: 0;
+        padding: 3px 10px;
+        position: absolute;
+        top: 50%;
+        transform: translate3d(-100%, -50%, 0);
+        transition: opacity 0.2s;
+        white-space: nowrap;
+    }
 }
 
 .btn, .btn-flat {
     &.light-blue { color: #fff; }
+}
+
+.btn-flat:focus {
+    background-color: transparent;
 }

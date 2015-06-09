@@ -1,4 +1,4 @@
-Template.copyItem2.helpers({
+Template.copyItemOld.helpers({
     getCopyRaw: function(copy, lang) {
         if (copy[lang] && copy[lang].val) return copy[lang].val;
         return "";

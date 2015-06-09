@@ -12,15 +12,30 @@
                 {{> copySection}}
             {{/each}}
 
-            <div class="copydeck-new">
-                <a class="btn-round modal-trigger" href="#modal-new-item">
-                    <i class="small mdi-content-add light-blue lighten-1 z-depth-1 btn-round white-text"></i>
+            <div class="fixed-action-btn">
+                <a class="btn-floating btn-large light-blue lighten-1 waves-effect waves-light" href="#modal-new-item">
+                    <i class="small mdi-content-add"></i>
                 </a>
+                <ul>
+                    <li>
+                        <span>Add/Remove Languages</span>
+                        <a class="btn-floating btn-small light-green lighten-1 waves-effect waves-light" href="#modal-edit-languages">
+                            <i class="tiny mdi-action-language"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <span>Add Section</span>
+                        <a class="btn-floating btn-small yellow waves-effect waves-light" href="#modal-new-section">
+                            <i class="tiny mdi-action-list"></i>
+                        </a>
+                    </li>
+                </ul>
             </div>
-
         </div>
     </div>
 
     {{> modalNewItem }}
+    {{> modalNewSection }}
+    {{> modalEditLanguages }}
     {{> modalDeleteProject }}
 </template>
