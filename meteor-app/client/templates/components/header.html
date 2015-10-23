@@ -14,11 +14,18 @@
 
             <ul class="right">
                 {{#if project}}
-                    <li>
-                        <a href="#" title="Show diff for modified items" data-action="toggle-diff">
-                            <i class="small mdi-action-visibility"></i>
-                        </a>
-                    </li>
+                    {{#if routeIs "project"}}
+                        <li>
+                            <a href="#" title="Show diff for modified items" data-action="toggle-diff">
+                                <i class="small mdi-action-visibility"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/edit/{{project._id}}" title="Edit Project">
+                                <i class="small mdi-content-create"></i>
+                            </a>
+                        </li>
+                    {{/if}}
                 {{/if}}
                 <li id="nav-dropdown">
                     <a href="#" class="dropdown-button" data-activates="nav-dropdown-actions"><i class="mdi-navigation-more-vert"></i></a>
@@ -36,16 +43,6 @@
                     </ul>
                 </li>
             </ul>
-
-            {{#if project}}
-                <!--<div class="container project-name">
-                    <div class="row">
-                        <div class="col s12">
-                            <h2>{{project.name}}</h2>
-                        </div>
-                    </div>
-                </div>-->
-            {{/if}}
 
             {{#if projects.count}}
                 <ul id="slide-out" class="side-nav fixed {{conditionalClass currentUser "" "hidden"}}">

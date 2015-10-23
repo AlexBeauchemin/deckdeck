@@ -11,4 +11,8 @@ if (Meteor.isClient) {
         if (condition) return trueClass;
         return falseClass;
     });
+
+    Template.registerHelper('routeIs', function (routeName) {
+        return Router.current().route.getName() === routeName;
+    });
 }

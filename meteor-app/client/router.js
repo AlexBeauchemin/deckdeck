@@ -13,4 +13,5 @@ Router.configure({
 
 Router.route('/', {name: 'home'});
 Router.route('/project/:_id', {name: 'project'});
+Router.route('/edit/:_id', {name: 'edit'});
 

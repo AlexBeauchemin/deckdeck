@@ -1,0 +1,52 @@
+<template name="Edit">
+    <div class="row">
+        <div class="col s12">
+            <h2>Project Name</h2>
+            <div class="input-field">
+                <input id="project-name" type="text" value="{{project.name}}">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <h2>Access</h2>
+        <div class="col s12 m4">
+            <h3>Admin</h3>
+            <ul>
+                {{#each users}}
+                    {{profile.name}}
+                {{/each}}
+            </ul>
+            <div class="input-field col s8 no-margin">
+                <input id="new-admin" type="text" placeholder="Add New Admin" />
+            </div>
+            <div class="col s4">
+                <a href="#" class="waves-effect waves-blue btn light-blue lighten-1">Add</a>
+            </div>
+        </div>
+        <div class="col s12 m4">
+            <h3>Writer</h3>
+            <ul>
+
+            </ul>
+            <div class="input-field col s8 no-margin">
+                <input id="new-writer" type="text" placeholder="Add New Writter" />
+            </div>
+            <div class="col s4">
+                <a href="#" class="waves-effect waves-blue btn light-blue lighten-1">Add</a>
+            </div>
+        </div>
+        <div class="col s12 m4">
+            <h3>Dev</h3>
+            <ul>
+
+            </ul>
+            <div class="input-field col s8 no-margin">
+                <input id="new-dev" type="text" placeholder="Add New Dev" />
+            </div>
+            <div class="col s4">
+                <a href="#" class="waves-effect waves-blue btn light-blue lighten-1">Add</a>
+            </div>
+        </div>
+    </div>
+</template>
+
